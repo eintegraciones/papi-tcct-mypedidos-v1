@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="dataverse-to-bronze-Flow" doc:id="e996ba27-5510-4333-ae4f-404795773cc0" >
+		<json-logger:logger doc:name="START: Dataverse to bronze" doc:id="f9bfefe3-2616-4867-86ef-d3b01d82e9c0" config-ref="JSON_Logger_Config" message="START: Dataverse to bronze"/>
+		<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="1ffabfd8-74b0-47e6-8c0a-533c26f66c07" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
+			<reconnect frequency="5000" count="3" />
+		</http:request>
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+payload.response map(payload.response[$$] 
+filterObject ((value, key, index) -&gt; 
+    !(key contains("@"))
+))]' doc:name="To Json with etags filtered" doc:id="9594f3a0-8e4e-4d2e-b29a-2e094a2932ba" />
+		<flow-ref doc:name="json-payload-to-parquet" doc:id="7bf54b6d-a474-4a1c-8d6d-5126279bf2c5" name="json-payload-to-parquet"/>
+		<flow-ref doc:name="parquet-bytes-to-multipart" doc:id="6d6a68ac-4c8d-4819-86c8-289b30b12eed" name="parquet-bytes-to-multipart"/>
+		<http:request method="POST" doc:name="POST /api/v1/datalake-bronze/{tabla}" doc:id="03065524-dd33-4486-ab9d-5e269ce82600" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.tabla as String]' >
+			<reconnect frequency="5000" count="3" />
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "multipart/form-data; boundary=--------------------------" ++ vars.boundary as String,
+	"Content-Length": vars.content_length as String
+}]]]></http:headers>
+		</http:request>
+		<set-payload value='""' doc:name="Empty payload to liberate memory" doc:id="7c756162-bfce-443f-bc81-87dffcfa7130" />
+		<json-logger:logger doc:name="END: Dataverse to bronze" doc:id="2cef86d1-e865-4861-b28e-84fc711d9963" config-ref="JSON_Logger_Config" message="END: Dataverse to bronze" tracePoint="END"/>
+	</sub-flow>
+</mule>

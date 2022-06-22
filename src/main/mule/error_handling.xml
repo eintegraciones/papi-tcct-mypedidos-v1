@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="Global_Error_Handler">
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On TIMEOUT Error Propagate"
+			doc:id="f610ec12-1426-4624-b05a-1f0790f79bf7" type="HTTP:TIMEOUT">
+			<ee:transform doc:name="Output 408 Error"
+				doc:id="0e82b421-9da0-4c74-a11a-e6a1b0665f58">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_408_timeout.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[408]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On BAD_REQUEST Error Propagate"
+			doc:id="c0143d9e-9ccb-4063-a337-705fd9b44e47" type="HTTP:BAD_REQUEST">
+			<ee:transform doc:name="Output 400 Error"
+				doc:id="7f8264e2-855d-4730-9af0-85daf1929ba7">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_400_bad_request.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On FORBIDDEN Error Propagate"
+			doc:id="abe6fb14-433e-49f7-b68d-1ad7dda48c31" type="HTTP:FORBIDDEN">
+			<ee:transform doc:name="Output 403 Error"
+				doc:id="6bc8037f-84bc-48a8-b1b5-99a439461318">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_403_forbidden.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[403]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On CLIENT_SECURITY Error Propagate"
+			doc:id="d4cef339-3a26-49af-a049-25401a000c7e" type="HTTP:CLIENT_SECURITY">
+			<ee:transform doc:name="Output 403 Error"
+				doc:id="189c7789-130c-402f-85b9-f25359242e19">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_403_client_security.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[403]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On NOT_ALLOWED Error Propagate"
+			doc:id="039b5ba1-00b6-4fcb-abf8-f4e73388d589"
+			type="HTTP:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Output 405 Error"
+				doc:id="f30465d9-ffcf-442f-95dc-c188d3bc8905">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_405_method_not_allowed.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On NOT_FOUND Error Propagate"
+			doc:id="ae82e552-2810-4181-bc46-5b551c9c4c74" type="HTTP:NOT_FOUND">
+			<ee:transform doc:name="Output 404 Error"
+				doc:id="e085d06d-51da-449c-a019-91a13230d749">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_404_not_found.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On UNAVAILABLE Error Propagate"
+			doc:id="c1171f0a-f2ed-4911-8a70-f105e019707f"
+			type="HTTP:SERVICE_UNAVAILABLE">
+			<ee:transform doc:name="Output 503 Error"
+				doc:id="64ab6938-003e-48db-a008-141d8d153ea6">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_503_service_unavailable.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[503]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On UNAUTHORIZED Error Propagate"
+			doc:id="8c65b39c-af71-411e-a0fc-6ac35edbe331"
+			type="HTTP:UNAUTHORIZED">
+			<ee:transform doc:name="Output 401 Error"
+				doc:id="683f502e-1d23-40d7-9c9c-01f2288ace47">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_401_unauthorized.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[401]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On UNAUTHORIZED Error Propagate"
+			doc:id="2e7aaf28-b81d-451b-8790-6021c6d8afb6"
+			type="HTTP:SECURITY">
+			<ee:transform doc:name="Output 401 Error"
+				doc:id="223420de-6737-4107-9b78-25661e2b293a">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_401_security.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[401]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On UNAUTHORIZED Error Propagate"
+			doc:id="3d239d78-8db7-4946-9b4a-8c9b6035c722"
+			type="HTTP:SERVER_SECURITY">
+			<ee:transform doc:name="Output 401 Error"
+				doc:id="7e967ef5-05d1-401b-9ba3-36d166683576">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_401_server_security.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[401]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On UNSUPPORTED Error Propagate"
+			doc:id="1082921e-f130-464e-bd81-c14c28fd7bdb"
+			type="HTTP:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Output 415 Error"
+				doc:id="47464451-d1cf-4862-b1bd-fd7b9422a4ec">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_415_unsupported_media_type.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On TOO_MANY_REQUESTS Error Propagate"
+			doc:id="467fa2f2-5747-478c-9bed-04a37ef0bd42"
+			type="HTTP:TOO_MANY_REQUESTS">
+			<ee:transform doc:name="Output 429 Error"
+				doc:id="6beba050-bd8c-4c99-9c24-f68aefeede21">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_429_too_many_requests.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[429]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On INTERNAL_SERVER_ERROR Error Propagate" doc:id="d486b01a-8325-4015-bca3-6e0da3efbe38" type="HTTP:CONNECTIVITY">
+			<ee:transform doc:name="Output 500 Error" doc:id="72a4f642-3eed-414e-afbd-a33263e90be2">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_500_connectivity.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On INTERNAL_SERVER_ERROR Error Propagate" doc:id="19d30614-3770-4c03-841c-90d30894ad0c" type="HTTP:INTERNAL_SERVER_ERROR">
+			<ee:transform doc:name="Output 500 Error" doc:id="ae6a6a1a-7cdb-4a10-893c-001f119dcafe">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/http/http_500_internal_server_error.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="a90fd8f6-b066-4de2-a52f-0806094e8269">
+			<ee:transform doc:name="Output 500 Error" doc:id="884ee4bd-baf2-4a56-94f9-19ec34dcf0ec">
+				<ee:message>
+					<ee:set-payload resource="dataweave/error/app/app_500_internal_server_error.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+
+</mule>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="set-current-date" doc:id="596a9bb9-5f2e-4a00-8315-635e739778c0" doc:description="Sub-flujo para sacar la fecha actual con el formato que necesita datalake y dividirlo en año, mes, día">
+		<set-variable value='#[var year = now() as String { format: "y"}
+var month = now() as String { format: "MM"}
+var day = now() as String { format: "dd"}
+---
+{
+	"year": year,
+	"month": month,
+	"day": day,
+	"concatenated": year ++ month ++ day
+}]' doc:name="date" doc:id="fb53e850-1d1d-44c1-96bc-1f144271063e" variableName="date" />
+	</sub-flow>
+</mule>

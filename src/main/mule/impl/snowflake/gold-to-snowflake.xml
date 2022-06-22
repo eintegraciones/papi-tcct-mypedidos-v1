@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="gold-to-snowflake-Flow" doc:id="601ee38a-8e47-4071-89dc-4b4a6007fa0e" >
+		<json-logger:logger doc:name="START: Gold to snowflake" doc:id="b876362b-4c11-49ba-80b9-46d19e19e6f1" config-ref="JSON_Logger_Config" message="START: Gold to snowflake"/>
+		<http:request method="GET" doc:name="GET /api/v1/datalake-gold/{year}/{month}/{day}/{tabla}" doc:id="09d7a043-59da-4b1c-88f4-c5727b2e3e2a" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-gold/" ++ vars.date.year as String ++ "/" ++ vars.date.month as String ++ "/" ++ vars.date.day as String ++ "/" ++ vars.tabla as String]' outputMimeType="application/json" >
+			<reconnect frequency="5000" count="3" />
+		</http:request>
+		<set-variable value="#[payload.file.fileName]" doc:name="filename" doc:id="071fc9df-d235-4612-a025-adea0d46a048" variableName="filename"/>
+		<set-payload value="#[%dw 2.0
+output application/java
+
+import fromBase64 from dw::core::Binaries
+---
+fromBase64(payload.file.bytes) as Binary]" doc:name="bytes from base64" doc:id="28b6ee41-b39a-4029-a4d9-aceaa7ba6592" />
+		<flow-ref doc:name="parquet-payload-to-json" doc:id="ae0d52e1-2219-4a94-8d54-e1dd0bcb098a" name="parquet-payload-to-json"/>
+		<set-variable value='#[p("tablas." ++ vars.tabla ++ ".tablename")]' doc:name="snowflake-tablename" doc:id="57dc5929-4498-4a22-8bf0-3eb5aaa7b80e" variableName="snowflake-tablename" />
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;payload map ((item, index) -&gt;&#10;    item mapObject (value, key) -&gt; {&#10;        (p("tablas." ++ vars.tabla ++ "." ++ key) as String default key): value&#10;    }&#10;)]' doc:name="map payload to snowflake" doc:id="c3b0d0c4-87b2-47db-b834-a56122791ca8" />
+		<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' >
+			<reconnect frequency="5000" count="3" />
+		</http:request>
+		<json-logger:logger doc:name="END: Gold to snowflake" doc:id="01b023f4-662e-4af9-a0db-8d9e2992ef23" config-ref="JSON_Logger_Config" message="END: Gold to snowflake" tracePoint="END"/>
+	</sub-flow>
+</mule>

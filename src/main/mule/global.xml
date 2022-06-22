@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:amazon-lambda="http://www.mulesoft.org/schema/mule/amazon-lambda"
+	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
+http://www.mulesoft.org/schema/mule/amazon-lambda http://www.mulesoft.org/schema/mule/amazon-lambda/current/mule-amazon-lambda.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+    <apikit:config name="papi-tcct-dataverse-to-snowflake-config" api="resource::fec2cd0e-9561-49a5-89d5-74b28062ae28:papi-tcct-dataverse-to-snowflake:1.0.2:raml:zip:papi-tcct-dataverse-to-snowflake.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="healthcheck-config" api="api\healthcheck.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="635bf38b-3391-4e05-b1f6-8f8019dc7440" environment="${mule.env}" />
+	<http:listener-config name="HTTPS_Listener_config_standard" doc:name="HTTP Listener config" doc:id="5dde8332-e9a4-4572-8bc6-c1964a155186">
+		<http:listener-connection host="0.0.0.0" port="${secure.port.external}" protocol="HTTPS">
+			<tls:context>
+				<tls:trust-store insecure="true" />
+				<tls:key-store type="${keystore.type}" path="${keystore.path}" alias="${keystore.alias}" keyPassword="${keystore.keyPassword}" password="${keystore.password}" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<configuration doc:name="Configuration" doc:id="69deda10-14cd-43be-af70-f529b48f4359" defaultErrorHandler-ref="Global_Error_Handler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="8f76d0d4-1d6c-4cb8-a8a3-6764a1ed61c0" file="config\properties_plain.yaml" />
+	<global-property doc:name="Global Property" doc:id="21a86305-6290-41ef-b6cc-7ea13dafcc61" name="autodiscoveryID" value="0" />
+	<api-gateway:autodiscovery apiId="${autodiscoveryID}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="3ea5fca5-23be-4b1d-a0f5-d7d89d541f05" flowRef="papi-tcct-dataverse-to-snowflake-main"/>
+	<global-property doc:name="Global Property" doc:id="9fe135ee-9de1-4c44-b61e-ead01cccc4ac" name="mule.env" value="int"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="0067b555-fc30-4a78-9845-d8b86443fa0b" file="config/properties-${mule.env}.yaml" />
+	<http:request-config name="Dataverse_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="9dc152f9-baec-48f2-81f1-1a739be7a78c" basePath="/api/v1" >
+		<http:request-connection host="${dataverse.host}" port="${dataverse.port.secure}" protocol="HTTPS"/>
+		<http:default-headers >
+			<http:default-header key="client_id" value='#[p("dataverse.client_id")]' />
+			<http:default-header key="client_secret" value='#[p("dataverse.client_secret")]' />
+		</http:default-headers>
+	</http:request-config>
+	<http:request-config name="Datalake_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="2a6f5c0d-b4e6-42c5-8854-4cf72dddee13" basePath="/api/v1" >
+		<http:request-connection host="${datalake.host}" port="${datalake.port.secure}" protocol="HTTPS"/>
+		<http:default-headers >
+			<http:default-header key="client_id" value='#[p("datalake.client_id")]' />
+			<http:default-header key="client_secret" value='#[p("datalake.client_secret")]' />
+		</http:default-headers>
+	</http:request-config>
+	<http:request-config name="Snowflake_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ebb180e0-d7e5-4596-b6e4-0411c237b62f" basePath="/api/v1" >
+		<http:request-connection host="${snowflake.host}" port="${snowflake.port.secure}" protocol="HTTPS"/>
+		<http:default-headers >
+			<http:default-header key="client_id" value='#[p("snowflake.client_id")]' />
+			<http:default-header key="client_secret" value='#[p("snowflake.client_secret")]' />
+		</http:default-headers>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="af1c2a3f-5999-48e6-afad-7ceacdc3f573" file="config/properties-tablas.yaml" />
+		<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="4acae453-7b65-4253-9c7b-4f711b8a2fd8" >
+		<cloudhub:connection clientId="${cloudhub.client_id}" clientSecret="${cloudhub.client_secret}" environment="${cloudhub.env_id}"/>
+	</cloudhub:config>
+</mule>
+

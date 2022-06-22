@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd
+http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+	<flow name="dataverse-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
+		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
+		<set-payload value='#[splitBy(p("tablas.listado"), ",") default []]' doc:name="Array of tables" doc:id="d847b2ab-6e2b-4795-b761-0995e3eef276" />
+		<batch:job jobName="dataverse-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
+			<batch:process-records >
+				<batch:step name="Dataverse-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
+					<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
+					<flow-ref doc:name="dataverse-to-bronze-Flow" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="dataverse-to-bronze-Flow"/>
+					<flow-ref doc:name="bronze-to-silver-Flow" doc:id="b16ec39f-969d-42cd-8f46-b18aab23f7ce" name="bronze-to-silver-Flow" />
+					<flow-ref doc:name="silver-to-gold-Flow" doc:id="c0ccf0c3-663d-4844-8545-8b5c9a30eb78" name="silver-to-gold-Flow" />
+					<flow-ref doc:name="gold-to-snowflake-Flow" doc:id="c720c960-840b-4ce4-be73-8ede3c9cf67b" name="gold-to-snowflake-Flow" />
+				</batch:step>
+				<batch:step name="BatchErrorHandler" doc:id="5c4d11c6-8f0b-4d16-aec1-92e7df180158" acceptPolicy="ONLY_FAILURES">
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="a9f3fac9-2f9e-44c5-917c-c586f6782b10" streaming="true">
+						<foreach doc:name="For Each" doc:id="cb96dfe2-a204-43af-b8bf-f0afab7acdc3" >
+							<set-variable value="#[vars.tablas default [] ++ [payload as String]]" doc:name="tablas" doc:id="a981a72a-792e-47f2-a295-c9ce92c0045f" variableName="tablas"/>
+						</foreach>
+						<json-logger:logger doc:name="Log failed values" doc:id="b928e9c1-6e6f-49da-940a-c630fa57a87e" config-ref="JSON_Logger_Config" message="Las siguientes tablas no pudieron ser procesadas" tracePoint="EXCEPTION" priority="ERROR" >
+							<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(vars.tablas) 
+}]]]></json-logger:content>
+						</json-logger:logger>
+						<set-variable value="${app.name}" doc:name="domain_notification" doc:id="8b53570b-2fb4-40b2-8de3-5ab1b999e33c" variableName="domain_notification" />
+						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
+						<cloudhub:create-notification doc:name="Create Notification" doc:id="e3f80833-721a-4755-ab1e-65e0832579c5" config-ref="CloudHub_Config" domain="#[vars.domain_notification]">
+						<reconnect frequency="5000" count="3" />
+							<cloudhub:message><![CDATA[#[vars.message_notification]]]></cloudhub:message>
+					</cloudhub:create-notification>
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete>
+				<json-logger:logger doc:name="END Batch JOB" doc:id="1b57f988-def1-4a06-ba52-e5bd843d37ab" config-ref="JSON_Logger_Config" message="END Batch JOB" tracePoint="END"/>
+			</batch:on-complete>
+		</batch:job>
+		<ee:transform doc:name="Transform Message" doc:id="86200cf7-2502-47d4-b57f-0c88fc5e4db0">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"response": "Batch Job is running"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+	</flow>
+</mule>

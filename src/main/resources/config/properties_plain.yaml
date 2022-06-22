@@ -1,0 +1,31 @@
+apiPath: "/api/v1/*"
+apiTestPath: "/api/v1/"
+apiName: "${app.name}"
+
+standard:
+   port:
+      external: "8081"
+      internal: "8091"
+secure:
+   port:
+      external: "8082"
+      internal: "8092"
+
+# json logger info
+json.logger.application.name: "${app.name}"
+json.logger.application.version: ""
+
+
+# Keystore certificate info  
+keystore:
+   type: "JKS"
+   alias: "keystore-tls-tcct"
+   path: "config/keystore-tls-tcct.jks"
+   password: "tcct@tcct"
+   keyPassword: "tcct@tcct"
+
+# Scheduler configuration
+scheduler:
+  cron:
+    expression: "0   0   3   ?   *   MON,TUE,WED,THU"
+    timeZone: "Europe/Madrid"
