@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>fec2cd0e-9561-49a5-89d5-74b28062ae28</groupId>
+	<groupId>663a0048-7c7b-47be-9b95-bde284c854c9</groupId>
 	<artifactId>papi-tcct-dataverse-to-snowflake-v1</artifactId>
 	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
@@ -74,7 +74,7 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>fec2cd0e-9561-49a5-89d5-74b28062ae28</groupId>
+			<groupId>663a0048-7c7b-47be-9b95-bde284c854c9</groupId>
 			<artifactId>json-logger</artifactId>
 			<version>2.1.0</version>
 			<classifier>mule-plugin</classifier>
@@ -102,15 +102,15 @@
 			<version>2.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>fec2cd0e-9561-49a5-89d5-74b28062ae28</groupId>
+			<groupId>663a0048-7c7b-47be-9b95-bde284c854c9</groupId>
 			<artifactId>mule-cloudhub-connector-token</artifactId>
 			<version>2.0.24</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>fec2cd0e-9561-49a5-89d5-74b28062ae28</groupId>
+			<groupId>663a0048-7c7b-47be-9b95-bde284c854c9</groupId>
 			<artifactId>papi-tcct-dataverse-to-snowflake</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

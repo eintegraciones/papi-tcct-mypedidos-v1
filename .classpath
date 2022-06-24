@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="MULE_LIB/fec2cd0e-9561-49a5-89d5-74b28062ae28/mule-cloudhub-connector-token/2.0.24"/>
+	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/663a0048-7c7b-47be-9b95-bde284c854c9/papi-tcct-dataverse-to-snowflake/1.0.0"/>
+	<classpathentry kind="con" path="MULE_LIB/663a0048-7c7b-47be-9b95-bde284c854c9/mule-cloudhub-connector-token/2.0.24"/>
+	<classpathentry kind="con" path="MULE_LIB/663a0048-7c7b-47be-9b95-bde284c854c9/json-logger/2.1.0"/>
+	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-apikit-module/1.6.0"/>
-	<classpathentry kind="con" path="MULE_LIB/fec2cd0e-9561-49a5-89d5-74b28062ae28/json-logger/2.1.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-http-connector/1.7.1"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-runner/2.3.9"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-tools/2.3.9"/>

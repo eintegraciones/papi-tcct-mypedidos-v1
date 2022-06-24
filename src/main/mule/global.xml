@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 http://www.mulesoft.org/schema/mule/amazon-lambda http://www.mulesoft.org/schema/mule/amazon-lambda/current/mule-amazon-lambda.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
-    <apikit:config name="papi-tcct-dataverse-to-snowflake-config" api="resource::fec2cd0e-9561-49a5-89d5-74b28062ae28:papi-tcct-dataverse-to-snowflake:1.0.2:raml:zip:papi-tcct-dataverse-to-snowflake.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="papi-tcct-dataverse-to-snowflake-config" api="resource::663a0048-7c7b-47be-9b95-bde284c854c9:papi-tcct-dataverse-to-snowflake:1.0.0:raml:zip:papi-tcct-dataverse-to-snowflake.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <apikit:config name="healthcheck-config" api="api\healthcheck.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="635bf38b-3391-4e05-b1f6-8f8019dc7440" environment="${mule.env}" />
 	<http:listener-config name="HTTPS_Listener_config_standard" doc:name="HTTP Listener config" doc:id="5dde8332-e9a4-4572-8bc6-c1964a155186">
