@@ -7,7 +7,7 @@
 	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
 
-	<name>papi-tcct-dataverse-to-snowflake-v1</name>
+	<name>papi-tcct-mypedidos-v1</name>
 	<description>Version básica del template para TCCT</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
