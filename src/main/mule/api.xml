@@ -33,6 +33,11 @@
         <apikit:console config-ref="papi-tcct-dataverse-to-snowflake-config" />
     </flow>
     <flow name="post:\mypedidos-to-snowflake:papi-tcct-dataverse-to-snowflake-config">
+    </flow>
+    <flow name="post:\mypedidos\dataverse\snowflake:papi-tcct-dataverse-to-snowflake-config">
+		<flow-ref doc:name="dataverse-no_datalake-to-snowflake-postFlow" doc:id="12671415-c647-4a0c-867f-89743c7260b4" name="dataverse-no_datalake-to-snowflake-postFlow"/>
+    </flow>
+    <flow name="post:\mypedidos\dataverse\datalake\snowflake:papi-tcct-dataverse-to-snowflake-config">
         <flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="caba84f1-fe7c-427d-88b7-575556fe16c0" name="dataverse-to-snowflake-postFlow" />
     </flow>
 </mule>

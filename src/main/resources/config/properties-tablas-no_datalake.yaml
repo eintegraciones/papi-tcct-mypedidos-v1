@@ -1,0 +1,53 @@
+dataverse-snowflake:
+  tablas:
+    # Listado de tablas a procesar
+    listado: [
+        "mc2plus_maestro_plus_cecos",
+        "mc2plus_maestro_plus_ambitos"
+      ]
+      
+  #Mapeos de tablas
+    mc2plus_maestro_plus_cecos:
+      tablename: "mc2_maestro_ceco"
+      importsequencenumber: "importsequencenumber"
+      timezoneruleversionnumber: "timezoneruleversionnumber"
+      _owninguser_value: "owninguser"
+      utcconversiontimezonecode: "utcconversiontimezonecode"
+      versionnumber: "versionnumber"
+      mc2plus_ceco: "mc2_ceco"
+      statecode: "statecode"
+      createdon: "createdon"
+      mc2plus_maestro_plus_cecoid: "mc2_maestro_cecoid"
+      statuscode: "statuscode"
+      _modifiedby_value: "modifiedby"
+      modifiedon: "modifiedon"
+      mc2plus_texto: "mc2_texto"
+      _createdby_value: "createdby"
+      _owningbusinessunit_value: "owningbusinessunit"
+      overriddencreatedon: "overriddencreatedon"
+      _owningteam_value: "owningteam"
+      _ownerid_value: "ownerid"
+      _modifiedonbehalfby_value: "modifiedonbehalfby"
+      _createdonbehalfby_value: "createdonbehalfby"
+      
+    mc2plus_maestro_plus_ambitos:
+      tablename: "mc2_maestro_ambito"
+      mc2plus_maestro_plus_ambitoid: "mc2_maestro_ambitoid"
+      importsequencenumber: "importsequencenumber"
+      timezoneruleversionnumber: "timezoneruleversionnumber"
+      _owninguser_value: "owninguser"
+      utcconversiontimezonecode: "utcconversiontimezonecode"
+      versionnumber: "versionnumber"
+      statecode: "statecode"
+      createdon: "createdon"
+      statuscode: "statuscode"
+      _modifiedby_value: "modifiedby"
+      modifiedon: "modifiedon"
+      _createdby_value: "createdby"
+      _owningbusinessunit_value: "owningbusinessunit"
+      overriddencreatedon: "overriddencreatedon"
+      _owningteam_value: "owningteam"
+      _ownerid_value: "ownerid"
+      _modifiedonbehalfby_value: "modifiedonbehalfby"
+      mc2plus_ambito: "mc2_ambito"
+      _createdonbehalfby_value: "createdonbehalfby"
