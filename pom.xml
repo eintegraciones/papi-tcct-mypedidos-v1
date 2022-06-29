@@ -109,8 +109,8 @@
 		</dependency>
 		<dependency>
 			<groupId>663a0048-7c7b-47be-9b95-bde284c854c9</groupId>
-			<artifactId>papi-tcct-dataverse-to-snowflake</artifactId>
-			<version>1.0.1</version>
+			<artifactId>papi-tcct-mypedidos</artifactId>
+			<version>1.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

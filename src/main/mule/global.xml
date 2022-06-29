@@ -13,9 +13,9 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 http://www.mulesoft.org/schema/mule/amazon-lambda http://www.mulesoft.org/schema/mule/amazon-lambda/current/mule-amazon-lambda.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
-    <apikit:config name="papi-tcct-dataverse-to-snowflake-config" api="resource::663a0048-7c7b-47be-9b95-bde284c854c9:papi-tcct-dataverse-to-snowflake:1.0.1:raml:zip:papi-tcct-dataverse-to-snowflake.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="papi-tcct-mypedidos-config" api="resource::663a0048-7c7b-47be-9b95-bde284c854c9:papi-tcct-mypedidos:1.0.0:raml:zip:papi-tcct-mypedidos.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <apikit:config name="healthcheck-config" api="api\healthcheck.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="635bf38b-3391-4e05-b1f6-8f8019dc7440" environment="${mule.env}" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="635bf38b-3391-4e05-b1f6-8f8019dc7440" environment="${mule.env}" disabledFields="content"/>
 	<http:listener-config name="HTTPS_Listener_config_standard" doc:name="HTTP Listener config" doc:id="5dde8332-e9a4-4572-8bc6-c1964a155186">
 		<http:listener-connection host="0.0.0.0" port="${secure.port.external}" protocol="HTTPS">
 			<tls:context>
@@ -27,7 +27,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 	<configuration doc:name="Configuration" doc:id="69deda10-14cd-43be-af70-f529b48f4359" defaultErrorHandler-ref="Global_Error_Handler" />
 	<configuration-properties doc:name="Configuration properties" doc:id="8f76d0d4-1d6c-4cb8-a8a3-6764a1ed61c0" file="config\properties_plain.yaml" />
 	<global-property doc:name="Global Property" doc:id="21a86305-6290-41ef-b6cc-7ea13dafcc61" name="autodiscoveryID" value="0" />
-	<api-gateway:autodiscovery apiId="${autodiscoveryID}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="3ea5fca5-23be-4b1d-a0f5-d7d89d541f05" flowRef="papi-tcct-dataverse-to-snowflake-main"/>
+	<api-gateway:autodiscovery apiId="${autodiscoveryID}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="3ea5fca5-23be-4b1d-a0f5-d7d89d541f05" flowRef="papi-tcct-mypedidos-main"/>
 	<global-property doc:name="Global Property" doc:id="9fe135ee-9de1-4c44-b61e-ead01cccc4ac" name="mule.env" value="dev"/>
 	<configuration-properties doc:name="Configuration properties" doc:id="0067b555-fc30-4a78-9845-d8b86443fa0b" file="config/properties-${mule.env}.yaml" />
 	<http:request-config name="Dataverse_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="9dc152f9-baec-48f2-81f1-1a739be7a78c" basePath="/api/v1" >

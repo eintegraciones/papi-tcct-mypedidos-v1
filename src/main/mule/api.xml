@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <flow name="scheduled_dataverse-to-snowflake" doc:id="b2752fae-97eb-4594-bcb3-7ae7c5e8d1ba">
-        <scheduler doc:name="Scheduler" doc:id="cbb98cb8-00f1-4a0e-ba99-cc6d171aedb2">
-            <scheduling-strategy>
-                <cron expression="${scheduler.cron.expression}" timeZone="${scheduler.cron.timeZone}" />
-            </scheduling-strategy>
-        </scheduler>
-        <flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="8868602c-5a44-4364-b057-8af1a8dc3f0d" name="dataverse-to-snowflake-postFlow" />
-    </flow>
-    <flow name="papi-tcct-dataverse-to-snowflake-main">
-        <http:listener config-ref="HTTPS_Listener_config_standard" path="${apiPath}">
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <flow name="scheduled_dataverse-to-snowflake" doc:id="f3c004eb-5fce-46a2-ac33-47c65779ed01">
+		<scheduler doc:name="Scheduler" doc:id="fe7dd416-9216-4475-b63d-a35f0f675442">
+			<scheduling-strategy>
+				<cron expression="${scheduler.cron.expression}" timeZone="${scheduler.cron.timeZone}" />
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="93d78ef8-3f54-45ea-a764-2b280e1bc288" name="dataverse-to-snowflake-postFlow" />
+	</flow>
+	<flow name="papi-tcct-mypedidos-main">
+        <http:listener path="${apiPath}" config-ref="HTTPS_Listener_config_standard">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
@@ -18,10 +18,10 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="papi-tcct-dataverse-to-snowflake-config" />
+        <apikit:router config-ref="papi-tcct-mypedidos-config" />
     </flow>
-    <flow name="papi-tcct-dataverse-to-snowflake-console">
-        <http:listener config-ref="HTTPS_Listener_config_standard" path="/console/*">
+	<flow name="papi-tcct-mypedidos-console">
+        <http:listener path="/console/*" config-ref="HTTPS_Listener_config_standard">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
@@ -30,14 +30,12 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:console config-ref="papi-tcct-dataverse-to-snowflake-config" />
+        <apikit:console config-ref="papi-tcct-mypedidos-config" />
     </flow>
-    <flow name="post:\mypedidos-to-snowflake:papi-tcct-dataverse-to-snowflake-config">
+	<flow name="post:\mypedidos\dataverse\datalake\snowflake:papi-tcct-mypedidos-config">
+		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="fe39b027-5272-4b6e-a3ab-1bfa213fee03" name="dataverse-to-snowflake-postFlow" />
     </flow>
-    <flow name="post:\mypedidos\dataverse\snowflake:papi-tcct-dataverse-to-snowflake-config">
-		<flow-ref doc:name="dataverse-no_datalake-to-snowflake-postFlow" doc:id="12671415-c647-4a0c-867f-89743c7260b4" name="dataverse-no_datalake-to-snowflake-postFlow"/>
-    </flow>
-    <flow name="post:\mypedidos\dataverse\datalake\snowflake:papi-tcct-dataverse-to-snowflake-config">
-        <flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="caba84f1-fe7c-427d-88b7-575556fe16c0" name="dataverse-to-snowflake-postFlow" />
+	<flow name="post:\mypedidos\dataverse\snowflake:papi-tcct-mypedidos-config">
+		<flow-ref doc:name="dataverse-no_datalake-to-snowflake-postFlow" doc:id="e644e7d4-0980-44b5-a16a-7a2b7f9df666" name="dataverse-no_datalake-to-snowflake-postFlow" />
     </flow>
 </mule>

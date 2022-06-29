@@ -33,7 +33,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<batch:step name="BatchErrorHandler" doc:id="5c4d11c6-8f0b-4d16-aec1-92e7df180158" acceptPolicy="ONLY_FAILURES">
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="a9f3fac9-2f9e-44c5-917c-c586f6782b10" streaming="true">
 						<foreach doc:name="For Each" doc:id="cb96dfe2-a204-43af-b8bf-f0afab7acdc3" >
-							<set-variable value="#[vars.tablas default [] ++ [payload as String]]" doc:name="tablas" doc:id="a981a72a-792e-47f2-a295-c9ce92c0045f" variableName="tablas"/>
+							<set-variable value="#[vars.tablas default [] ++ [payload default 'empty table error' as String]]" doc:name="tablas" doc:id="a981a72a-792e-47f2-a295-c9ce92c0045f" variableName="tablas"/>
 						</foreach>
 						<json-logger:logger doc:name="Log failed values" doc:id="b928e9c1-6e6f-49da-940a-c630fa57a87e" config-ref="JSON_Logger_Config" message="Las siguientes tablas no pudieron ser procesadas" tracePoint="EXCEPTION" priority="ERROR" >
 							<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
