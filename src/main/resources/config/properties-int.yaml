@@ -21,6 +21,14 @@ snowflake:
     secure: "443"
   client_id: "3c59072ee817434093b1f326d2a75a7e"
   client_secret: ""
+  
+sqlserver:
+  host: "sapi-tcct-mssql-v1-dev.ir-e1.cloudhub.io"
+  port: 
+    insecure: "80"
+    secure: "443"
+  client_id: "c06620083a3b4c06bea14addb666b8b3"
+  client_secret: ""
 
 cloudhub:
   env_id: "026101c2-522a-4ebc-8ca8-8ae3bc565426"

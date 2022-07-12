@@ -51,6 +51,13 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 			<http:default-header key="client_secret" value='#[p("snowflake.client_secret")]' />
 		</http:default-headers>
 	</http:request-config>
+	<http:request-config name="SQLServer_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="b2631f6b-8c4a-4c3a-a999-76a25b201b4b" basePath="/api/v1" >
+		<http:request-connection host="${sqlserver.host}" port="${sqlserver.port.secure}" protocol="HTTPS"/>
+		<http:default-headers >
+			<http:default-header key="client_id" value='#[p("sqlserver.client_id")]' />
+			<http:default-header key="client_secret" value='#[p("sqlserver.client_secret")]' />
+		</http:default-headers>
+	</http:request-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="af1c2a3f-5999-48e6-afad-7ceacdc3f573" file="config/properties-tablas.yaml" />
 		<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="4acae453-7b65-4253-9c7b-4f711b8a2fd8" >
 		<cloudhub:connection clientId="${cloudhub.client_id}" clientSecret="${cloudhub.client_secret}" environment="${cloudhub.env_id}"/>

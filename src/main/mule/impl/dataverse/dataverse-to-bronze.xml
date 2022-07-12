@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="dataverse-to-bronze-Flow" doc:id="e996ba27-5510-4333-ae4f-404795773cc0" >
 		<json-logger:logger doc:name="START: Dataverse to bronze" doc:id="f9bfefe3-2616-4867-86ef-d3b01d82e9c0" config-ref="JSON_Logger_Config" message="START: Dataverse to bronze"/>
-		<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="1ffabfd8-74b0-47e6-8c0a-533c26f66c07" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
+		<choice doc:name="Choice" doc:id="05b5f743-a0a3-4360-b8aa-7726611d8b48" >
+			<when expression='"sqlserver" == p("tablas." ++ vars.tabla as String ++ ".origin")'>
+				<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]'>
+					<reconnect frequency="5000" count="3" />
+				</http:request>
+			</when>
+			<otherwise >
+				<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="1ffabfd8-74b0-47e6-8c0a-533c26f66c07" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
+			</otherwise>
+		</choice>
 		<set-payload value='#[%dw 2.0
 output application/json
 ---
