@@ -1,1 +1,8 @@
-/target/
+*.classpath
+*.project
+/.metadata/
+.mule/
+.tooling/
+.tooling-apps-cache/
+target/
+**/target/
