@@ -1,6 +1,6 @@
 %dw 2.0
 
-type auto_601ee38a_8e47_4071_89dc_4b4a6007fa0e_Output_Variables_date = {|
+type auto_b1c524a9_005c_48c0_a873_d93ccfdbf8c5_Output_Variables_date = {|
   year: String {"format": "y"}, 
   month: String {"format": "MM"}, 
   day: String {"format": "dd"}, 

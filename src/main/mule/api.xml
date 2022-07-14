@@ -41,7 +41,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
         </http:listener>
         <apikit:console config-ref="papi-tcct-mypedidos-config" />
     </flow>
-	<flow name="post:\mypedidos\dataverse\datalake\snowflake:papi-tcct-mypedidos-config">
+	<flow name="post:\dataverse-sqlserver-to-snowflake:papi-tcct-mypedidos-config">
 		<flow-ref doc:name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="fe39b027-5272-4b6e-a3ab-1bfa213fee03" name="dataverse-sqlserver-to-snowflake-postFlow" />
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="3bf68fa2-529f-49aa-a448-8f275168dfbd" >
@@ -54,7 +54,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 			</on-error-propagate>
 		</error-handler>
     </flow>
-	<flow name="post:\mypedidos\dataverse\snowflake:papi-tcct-mypedidos-config">
+	<flow name="post:\dataverse-to-snowflake:papi-tcct-mypedidos-config">
 		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="e644e7d4-0980-44b5-a16a-7a2b7f9df666" name="dataverse-to-snowflake-postFlow" />
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="e9bd65fe-2a63-42d8-9eb6-5a7cf4a68c6d" >

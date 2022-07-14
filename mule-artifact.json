@@ -1,4 +1,10 @@
 {
   "minMuleVersion": "4.4.0",
-  "secureProperties": ["dataverse.client_secret", "datalake.client_secret", "snowflake.client_secret", "cloudhub.client_secret"]
+  "secureProperties": [
+  	"dataverse.client_secret",
+  	"datalake.client_secret",
+  	"snowflake.client_secret",
+  	"sqlserver.client_secret",
+  	"cloudhub.client_secret"
+  ]
 }

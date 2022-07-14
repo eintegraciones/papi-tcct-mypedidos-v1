@@ -31,7 +31,7 @@ sqlserver:
   client_secret: ""
 
 cloudhub:
-  env_id: "026101c2-522a-4ebc-8ca8-8ae3bc565426"
-  client_id: "79314592f7cb4944bb059af6dda16e29"
+  env_id: "0b12e2ae-f34d-4e20-93fa-3057a417ade4"
+  client_id: "0fd877431f3c4ffdb7af1ae2c6021006"
   # Por seguridad, se informa por variable de entorno
   client_secret: ""

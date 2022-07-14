@@ -1,5 +1,5 @@
 tablas:
-  556:
+  "556":
     # Listado de tablas a procesar
     listado: [
         "mc2plus_maestro_plus_cecos",
@@ -7,7 +7,7 @@ tablas:
       ]
     #Mapeos de tablas
     mc2plus_maestro_plus_cecos:
-      tablename: "mc2_maestro_ceco"
+      tablename: "mc2plus_maestro_ceco"
       importsequencenumber: "importsequencenumber"
       timezoneruleversionnumber: "timezoneruleversionnumber"
       _owninguser_value: "owninguser"
@@ -30,7 +30,7 @@ tablas:
       _createdonbehalfby_value: "createdonbehalfby"
       
     mc2plus_maestro_plus_ambitos:
-      tablename: "mc2_maestro_ambito"
+      tablename: "mc2plus_maestro_ambito"
       mc2plus_maestro_plus_ambitoid: "mc2_maestro_ambitoid"
       importsequencenumber: "importsequencenumber"
       timezoneruleversionnumber: "timezoneruleversionnumber"

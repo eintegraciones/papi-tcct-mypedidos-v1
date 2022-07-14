@@ -1,5 +1,5 @@
 tablas:
-  618:
+  "618":
     # Listado de tablas a procesar
     listado: [
         "mc2plus_maestro_plus_cecos",
