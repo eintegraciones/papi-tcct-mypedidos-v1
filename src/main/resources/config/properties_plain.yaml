@@ -26,6 +26,14 @@ keystore:
 
 # Scheduler configuration
 scheduler:
-  cron:
-    expression: "0   0   3   ?   *   MON,TUE,WED,THU"
-    timeZone: "Europe/Madrid"
+  # Programación de la integración 556
+  556:
+    cron:
+      expression: "0   0   3   ?   *   MON,TUE,WED,THU"
+      timeZone: "Europe/Madrid"
+  # Programación de la integración 618
+  618:
+    cron:
+      expression: "0   0   3   ?   *   MON,TUE,WED,THU"
+      timeZone: "Europe/Madrid"
+    

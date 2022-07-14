@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 			<batch:process-records >
 				<batch:step name="Dataverse-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
 					<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
-					<flow-ref doc:name="dataverse-to-bronze-Flow" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="dataverse-to-bronze-Flow"/>
+					<flow-ref doc:name="Subflow-dataverse-sqlserver-to-bronze" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="Subflow-dataverse-sqlserver-to-bronze"/>
 					<flow-ref doc:name="bronze-to-silver-Flow" doc:id="b16ec39f-969d-42cd-8f46-b18aab23f7ce" name="bronze-to-silver-Flow" />
 					<flow-ref doc:name="silver-to-gold-Flow" doc:id="c0ccf0c3-663d-4844-8545-8b5c9a30eb78" name="silver-to-gold-Flow" />
 					<flow-ref doc:name="gold-to-snowflake-Flow" doc:id="c720c960-840b-4ce4-be73-8ede3c9cf67b" name="gold-to-snowflake-Flow" />

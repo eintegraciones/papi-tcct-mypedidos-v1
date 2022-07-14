@@ -79,12 +79,6 @@
 			<version>2.1.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-apikit-module</artifactId>
-			<version>1.6.0</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
 		<!-- Parquet conversion dependencies -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
@@ -113,6 +107,18 @@
 			<version>1.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-db-connector</artifactId>
+			<version>1.13.4</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-apikit-module</artifactId>
+			<version>1.6.0</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 
