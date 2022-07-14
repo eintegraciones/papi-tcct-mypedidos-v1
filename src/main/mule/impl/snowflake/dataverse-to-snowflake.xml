@@ -17,19 +17,14 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="61667e64-6978-40b7-ae62-b7816a25c7dd" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
-		<set-variable value="#[%dw 2.0
-output application/java
----
-p('dataverse-snowflake.tablas.' ++ (vars.tabla as String) ++ '.tablename')]" doc:name="snowflake-tablename" doc:id="7698eac2-fa02-43b2-a298-9404539127c2" variableName="snowflake-tablename" />
-		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;payload.response map(payload.response[$$] &#10;filterObject ((value, key, index) -&gt; &#10;    !(key contains("@"))&#10;))]' doc:name="To Json with etags filtered" doc:id="9a1a6598-aa20-499c-8f00-6b6fd8f32fbf" />
 		<set-payload value='#[%dw 2.0
 output application/json
 ---
-payload map ((item, index) -&gt;
-    item mapObject (value, key) -&gt; {
-        (p("dataverse-snowflake.tablas." ++ vars.tabla ++ "." ++ key) as String default key): value
-    }
-)]' doc:name="map payload to snowflake" doc:id="e3be5acf-d0e2-4183-9fa6-95a3baebff53" />
+payload.response map(payload.response[$$] 
+filterObject ((value, key, index) -&gt; 
+    !(key contains("@"))
+))]' doc:name="To Json with etags filtered" doc:id="2f3113b4-a88c-477b-b7df-941934a65ed1" />
+		<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="92be9470-cea6-4f12-8efa-b9c641c4c48b" name="dataverse-to-snowflake-payload-transform" />
 		<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="ad23f1e2-dda9-427f-a10a-1887492c663e" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' >
 			<reconnect frequency="5000" count="3" />
 		</http:request>

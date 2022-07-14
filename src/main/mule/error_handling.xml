@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
 	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
 	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="subflow_error_send_notifications" doc:id="9104e69b-cf57-4843-80f6-eb0b96d3c491" >
+		<set-variable value="${app.name}" doc:name="domain_notification" doc:id="ed3d2e05-ff87-4a63-b315-aef665f92b4b" variableName="domain_notification" />
+		<set-variable value='#["ERROR " ++ p("app.name") ++ ": " ++ error.description as String]' doc:name="message_notification" doc:id="588118e8-1977-4701-bda3-3f4db0d27419" variableName="message_notification" />
+		<ee:transform doc:name="response_error" doc:id="afcb8da3-2a04-46bd-9f45-1efded6b1151" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="response_error" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try" doc:id="1a20f618-bc72-4624-95ce-0716419a626c" >
+			<cloudhub:create-notification domain='#[vars.domain_notification default "api-tcct-basic-template"]' doc:name="Create Notification" doc:id="61bcc68d-d305-4e1c-ab6d-fc6289e2f609" config-ref="CloudHub_Config" priority="ERROR">
+			<cloudhub:message><![CDATA[#[vars.message_notification default ""]]]></cloudhub:message>
+		</cloudhub:create-notification>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c87b40ca-5229-48a9-9698-85d4cb904bd4" when="#[error.errorType.namespace == 'CLOUDHUB']" >
+					<json-logger:logger doc:name="No se pudo enviar la notificación a Cloudhub" doc:id="4fb8515f-092b-4295-abac-0d1988818f94" config-ref="JSON_Logger_Config" message="No se pudo enviar la notificación a Cloudhub" tracePoint="EXCEPTION" priority="ERROR" >
+						<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(error) 
+}]]]></json-logger:content>
+					</json-logger:logger>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Payload" doc:id="14206b05-4525-4ec3-bc13-cb78fe00258f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.response_error default { error: vars.httpStatus}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
 	<error-handler name="Global_Error_Handler">
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On TIMEOUT Error Propagate"
@@ -206,29 +243,4 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 			<flow-ref doc:name="Flow Reference" doc:id="9b7e7e20-b8de-41ac-8b52-5a82a3a51250" name="subflow_error_send_notifications" />
 		</on-error-propagate>
 	</error-handler>
-	<sub-flow name="subflow_error_send_notifications" doc:id="09915433-165f-49ef-86fc-732c19b4bd14" >
-		<set-variable value="${app.name}" doc:name="domain_notification" doc:id="33c9b3f4-6f9e-403a-bb30-12ab07191c76" variableName="domain_notification" />
-		<set-variable value='#["ERROR " ++ p("app.name") ++ ": " ++ error.description as String]' doc:name="message_notification" doc:id="ada4cc2f-6ac5-4548-9377-9d5577c4ae16" variableName="message_notification" />
-		<ee:transform doc:name="response_error" doc:id="b2060a23-dbb9-4a77-9eda-ae08348bbbaf" >
-			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="response_error" ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<cloudhub:create-notification domain='#[vars.domain_notification default "api-tcct-basic-template"]' doc:name="Create Notification" doc:id="8138de2f-20b1-46e8-b2b6-41c3e17b387f" config-ref="CloudHub_Config" priority="ERROR" >
-			<cloudhub:message ><![CDATA[#[vars.message_notification default ""]]]></cloudhub:message>
-		</cloudhub:create-notification>
-		<ee:transform doc:name="Payload" doc:id="5ea51eb4-d35c-4389-b108-4b929de533bc" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-vars.response_error default { error: vars.httpStatus}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-	</sub-flow>
-
 </mule>

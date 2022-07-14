@@ -1,12 +1,11 @@
-dataverse-snowflake:
-  tablas:
+tablas:
+  556:
     # Listado de tablas a procesar
     listado: [
         "mc2plus_maestro_plus_cecos",
         "mc2plus_maestro_plus_ambitos"
       ]
-      
-  #Mapeos de tablas
+    #Mapeos de tablas
     mc2plus_maestro_plus_cecos:
       tablename: "mc2_maestro_ceco"
       importsequencenumber: "importsequencenumber"

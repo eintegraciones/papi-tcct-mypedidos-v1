@@ -1,35 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
-	xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd
 http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
 http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
-http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<flow name="dataverse-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+	<flow name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
-		<set-variable value="618" doc:name="integration_id: 618" doc:id="3f465f41-3c9a-4a0f-b97c-cbd5e20cdebe" variableName="integration_id"/>
-		<json-logger:logger doc:name="tablas yaml" doc:id="0aaae047-cb3e-4ea9-b8fe-3f5704dee6d5" config-ref="JSON_Logger_Config" message="tablas yaml" tracePoint="FLOW" priority="DEBUG">
-			<json-logger:content ><![CDATA[import modules::JSONLoggerModule output application/json ---
-{
-    payload: JSONLoggerModule::stringifyNonJSON(payload) 
-}]]></json-logger:content>
-		</json-logger:logger>
-		<flow-ref doc:name="get-array-of-tables-by-integration_id" doc:id="b044f845-41f1-4143-9537-907fed077310" name="get-array-of-tables-by-integration_id" />
-		<batch:job jobName="dataverse-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
+		<set-variable value="556" doc:name="integration_id: 556" doc:id="3db3d4ce-086c-4206-ab98-81a87df5ead2" variableName="integration_id"/>
+		<flow-ref doc:name="get-array-of-tables-by-integration_id" doc:id="a7765056-b940-4469-8826-046e9a630789" name="get-array-of-tables-by-integration_id"/>
+		<batch:job jobName="dataverse-sqlserver-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
 			<batch:process-records >
-				<batch:step name="Dataverse-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
-					<json-logger:logger doc:name="Batch step" doc:id="179e9072-68f5-4861-8eb7-658fc06ba87e" config-ref="JSON_Logger_Config" message="Batch step" tracePoint="FLOW" priority="DEBUG">
-						<json-logger:content ><![CDATA[import modules::JSONLoggerModule output application/json ---
-{
-    payload: JSONLoggerModule::stringifyNonJSON(payload) 
-}]]></json-logger:content>
-					</json-logger:logger>
-					<flow-ref doc:name="dataverse-to-snowflake-Flow" doc:id="c720c960-840b-4ce4-be73-8ede3c9cf67b" name="dataverse-to-snowflake-Flow" />
+				<batch:step name="Dataverse-sqlserver-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
+					<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
+					<flow-ref doc:name="dataverse-sqlserver-to-bronze-Flow" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="dataverse-sqlserver-to-bronze-Flow"/>
+					<flow-ref doc:name="bronze-to-silver-Flow" doc:id="b16ec39f-969d-42cd-8f46-b18aab23f7ce" name="bronze-to-silver-Flow" />
+					<flow-ref doc:name="silver-to-gold-Flow" doc:id="c0ccf0c3-663d-4844-8545-8b5c9a30eb78" name="silver-to-gold-Flow" />
+					<flow-ref doc:name="gold-to-snowflake-Flow" doc:id="c720c960-840b-4ce4-be73-8ede3c9cf67b" name="gold-to-snowflake-Flow" />
 				</batch:step>
 				<batch:step name="BatchErrorHandler" doc:id="5c4d11c6-8f0b-4d16-aec1-92e7df180158" acceptPolicy="ONLY_FAILURES">
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="a9f3fac9-2f9e-44c5-917c-c586f6782b10" streaming="true">
@@ -44,14 +35,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 						</json-logger:logger>
 						<set-variable value="${app.name}" doc:name="domain_notification" doc:id="8b53570b-2fb4-40b2-8de3-5ab1b999e33c" variableName="domain_notification" />
 						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
-						<try doc:name="Try" doc:id="2814769a-36a4-4f4a-91ab-70541289c7cd" >
+						<try doc:name="Try" doc:id="2d7ff03a-abdc-4aab-957e-7ce49cd00bdd" >
 							<cloudhub:create-notification doc:name="Create Notification" doc:id="e3f80833-721a-4755-ab1e-65e0832579c5" config-ref="CloudHub_Config" domain="#[vars.domain_notification]">
 						<reconnect frequency="5000" count="3" />
 							<cloudhub:message><![CDATA[#[vars.message_notification]]]></cloudhub:message>
 					</cloudhub:create-notification>
 							<error-handler >
-								<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5ece6854-0cef-4991-b7ab-1f74d2dabdad" when="#[error.errorType.namespace == 'CLOUDHUB']" >
-									<json-logger:logger doc:name="No se pudo enviar la notificación a Cloudhub" doc:id="fa420821-8882-4d93-994c-a6bea641c6e8" config-ref="JSON_Logger_Config" message="No se pudo enviar la notificación a Cloudhub" tracePoint="EXCEPTION" priority="ERROR" >
+								<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="311cca2c-1b0c-44fa-a5bb-ade972acfce7" when="#[error.errorType.namespace == 'CLOUDHUB']" >
+									<json-logger:logger doc:name="No se pudo enviar la notificación a Cloudhub" doc:id="fadd21fb-6d98-4eb0-85fc-df8b1036cb07" config-ref="JSON_Logger_Config" message="No se pudo enviar la notificación a Cloudhub" tracePoint="EXCEPTION" priority="ERROR" >
 										<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     payload: JSONLoggerModule::stringifyNonJSON(error) 
@@ -73,7 +64,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 output application/json
 ---
 {
-	"response": "Batch Job dataverse-to-snowflake is running"
+	"response": "Batch Job dataverse-sqlserver-to-snowflake is running"
 }]]></ee:set-payload>
 					</ee:message>
 			<ee:variables >

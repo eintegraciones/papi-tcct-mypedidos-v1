@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
     <flow name="scheduled_dataverse-to-datalake-to-snowflake" doc:id="f3c004eb-5fce-46a2-ac33-47c65779ed01">
 		<scheduler doc:name="Scheduler 556" doc:id="fe7dd416-9216-4475-b63d-a35f0f675442">
 			<scheduling-strategy>
 				<cron expression="${scheduler.556.cron.expression}" timeZone="${scheduler.556.cron.timeZone}" />
 			</scheduling-strategy>
 		</scheduler>
-		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="93d78ef8-3f54-45ea-a764-2b280e1bc288" name="dataverse-to-snowflake-postFlow" />
+		<flow-ref doc:name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="93d78ef8-3f54-45ea-a764-2b280e1bc288" name="dataverse-sqlserver-to-snowflake-postFlow" />
 	</flow>
 	<flow name="scheduled_dataverse-to-snowflake" doc:id="24934d06-4405-4ef7-bef0-f81732dc8133">
 		<scheduler doc:name="Scheduler 618" doc:id="b980790c-3841-4ce2-bbe5-3e32a0ae1cfb">
@@ -14,7 +15,7 @@
 				<cron expression="${scheduler.618.cron.expression}" timeZone="${scheduler.618.cron.timeZone}" />
 			</scheduling-strategy>
 		</scheduler>
-		<flow-ref doc:name="dataverse-no_datalake-to-snowflake-postFlow" doc:id="6169b131-479f-44fd-9f7f-9fc58ac56702" name="dataverse-no_datalake-to-snowflake-postFlow"/>
+		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="6169b131-479f-44fd-9f7f-9fc58ac56702" name="dataverse-to-snowflake-postFlow"/>
 	</flow>
 	<flow name="papi-tcct-mypedidos-main">
         <http:listener path="${apiPath}" config-ref="HTTPS_Listener_config_standard">
@@ -41,9 +42,29 @@
         <apikit:console config-ref="papi-tcct-mypedidos-config" />
     </flow>
 	<flow name="post:\mypedidos\dataverse\datalake\snowflake:papi-tcct-mypedidos-config">
-		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="fe39b027-5272-4b6e-a3ab-1bfa213fee03" name="dataverse-to-snowflake-postFlow" />
+		<flow-ref doc:name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="fe39b027-5272-4b6e-a3ab-1bfa213fee03" name="dataverse-sqlserver-to-snowflake-postFlow" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="3bf68fa2-529f-49aa-a448-8f275168dfbd" >
+				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" doc:id="202da18c-d89b-426f-8ab4-ff5c231c155a" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" >
+					<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(error) 
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</on-error-propagate>
+		</error-handler>
     </flow>
 	<flow name="post:\mypedidos\dataverse\snowflake:papi-tcct-mypedidos-config">
-		<flow-ref doc:name="dataverse-no_datalake-to-snowflake-postFlow" doc:id="e644e7d4-0980-44b5-a16a-7a2b7f9df666" name="dataverse-no_datalake-to-snowflake-postFlow" />
+		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="e644e7d4-0980-44b5-a16a-7a2b7f9df666" name="dataverse-to-snowflake-postFlow" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="e9bd65fe-2a63-42d8-9eb6-5a7cf4a68c6d" >
+				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-to-snowflake" doc:id="5c8c4af0-3ea4-44d0-b367-9c3c0775514b" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-to-snowflake" >
+					<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(error) 
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</on-error-propagate>
+		</error-handler>
     </flow>
 </mule>
