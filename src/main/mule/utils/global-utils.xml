@@ -8,7 +8,14 @@
 	</sub-flow>
 	<sub-flow name="dataverse-to-snowflake-payload-transform" doc:id="79894b28-462a-4ec5-82b7-df9c2fb626ed" >
 		<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) ++ '.tablename')]" doc:name="snowflake-tablename" doc:id="7698eac2-fa02-43b2-a298-9404539127c2" variableName="snowflake-tablename" />
-		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;payload map ((item, index) -&gt;&#10;    item mapObject (value, key) -&gt; {&#10;        (p("tablas." ++ vars.integration_id ++ "." ++ vars.tabla ++ "." ++ key) as String default key): value&#10;    }&#10;)]' doc:name="map payload to snowflake" doc:id="e3be5acf-d0e2-4183-9fa6-95a3baebff53" />
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+payload map ((item, index) -&gt;
+    item mapObject ({
+        (p("tablas." ++ vars.integration_id ++ "." ++ vars.tabla ++ "." ++ ($$ as String)) as String default ""): $
+    }) filterObject (!isEmpty($$ as String))
+)]' doc:name="map payload to snowflake" doc:id="e3be5acf-d0e2-4183-9fa6-95a3baebff53" />
 	</sub-flow>
 	<sub-flow name="set-current-date" doc:id="596a9bb9-5f2e-4a00-8315-635e739778c0" doc:description="Sub-flujo para sacar la fecha actual con el formato que necesita datalake y dividirlo en año, mes, día">
 		<set-variable value='#[var year = now() as String { format: "y"}
