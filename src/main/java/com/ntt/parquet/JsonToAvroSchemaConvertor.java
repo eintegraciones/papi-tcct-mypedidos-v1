@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +19,35 @@ import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
 public class JsonToAvroSchemaConvertor {
 	
+	private static Map<String, Object> extractFieldMapFromJson(List<Map<String, Object>> json) {
+		Map<String, Object> resp = new LinkedHashMap<String, Object>();
+		int keySize = json.get(0).keySet().size();
+		int count = 0;
+		Iterator<Map<String, Object>> it = json.iterator();
+		
+		while(it.hasNext() && count < keySize) {
+			Map<String, Object> record = it.next();
+			for(String key : record.keySet()) {
+				if(!resp.containsKey(key) && record.get(key) != null && !record.get(key).equals("null")) {
+					resp.put(key, record.get(key));
+					count = count++;
+				} else if(!it.hasNext() && !resp.containsKey(key)) {
+					resp.put(key, record.get(key));
+				}
+			}
+		}
+		return resp;
+	}
+	
 	public static Schema toAvroSchema(String tableName, List<Map<String, Object>> json) {
-		Map<String, Object> map = json.get(0);
+		Map<String, Object> map = extractFieldMapFromJson(json);
 		
 		String schema = "{\"type\" : \"record\", \"namespace\" : \"com.nttdata.bean\", \"name\" : \"" + tableName + "\", \"fields\" : [";
 		for(String key : map.keySet()) {
 			if(map.get(key) instanceof Double) {
 				schema = schema + "{\"name\" : \"" + key + "\", \"type\" : [\"null\", \"double\"] },";
+			} else if(map.get(key) instanceof Boolean) {
+				schema = schema + "{\"name\" : \"" + key + "\", \"type\" : [\"null\", \"boolean\"] },";
 			} else if(map.get(key) instanceof Integer) {
 				schema = schema + "{\"name\" : \"" + key + "\", \"type\" : [\"null\", \"int\"] },";
 			} else if(map.get(key) instanceof Float) {
@@ -42,7 +66,7 @@ public class JsonToAvroSchemaConvertor {
 		System.out.println("PARSED AVRO SCHEMA: " + SCHEMA);
 		return SCHEMA;
 	}
-	
+
 	public static void toParquet(String tmpPath, List<Map<String, Object>> data, Schema schema) {
 		try(ParquetWriter<GenericData.Record> writer = AvroParquetWriter.<GenericData.Record>builder(new Path(tmpPath))
 				.withRowGroupSize(256 * 1024 * 1024).withPageSize(1024 * 1024)

@@ -23,7 +23,7 @@ snowflake:
   client_secret: ""
   
 sqlserver:
-  host: "sapi-tcct-mssql-v1-dev.ir-e1.cloudhub.io"
+  host: "sapi-tcct-sql-server-v1-dev.ir-e1.cloudhub.io"
   port: 
     insecure: "80"
     secure: "443"

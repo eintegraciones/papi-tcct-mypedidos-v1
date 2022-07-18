@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<sub-flow name="dataverse-to-snowflake-Flow" doc:id="b505bcb2-66ba-45e5-8526-d62257e67f3b" >
 		<json-logger:logger doc:name="START: Dataverse to Snowflake" doc:id="dbc195c9-10b3-4450-8ea4-998fd542b435" config-ref="JSON_Logger_Config" message="START: Dataverse to Snowflake" >
 			<json-logger:content ><![CDATA[import modules::JSONLoggerModule output application/json ---
@@ -13,10 +14,10 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
     payload: JSONLoggerModule::stringifyNonJSON(payload) 
 }]]></json-logger:content>
 		</json-logger:logger>
-		<set-variable value="#[payload]" doc:name="tabla" doc:id="8abb1794-a5e5-429e-ba97-c222b167e9b1" variableName="tabla" />
 		<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="61667e64-6978-40b7-ae62-b7816a25c7dd" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
+		<validation:is-not-empty-collection doc:name="payload.response" doc:id="1de5c84c-3449-4ee0-8db7-df28989c0f66" values="#[payload.response]" message='#["No se han encontrado datos en la tabla " ++ vars.tabla as String]' />
 		<set-payload value='#[%dw 2.0
 output application/json
 ---

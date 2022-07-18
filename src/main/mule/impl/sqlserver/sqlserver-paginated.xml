@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="sqlserver-paginated-call" doc:id="4fa133a3-7a35-46df-9d61-f136fcb7619a" >
+		<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]'>
+					<reconnect frequency="5000" count="3" />
+				</http:request>
+	</sub-flow>
+</mule>

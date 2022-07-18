@@ -13,12 +13,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="dataverse-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
 		<set-variable value="618" doc:name="integration_id: 618" doc:id="3f465f41-3c9a-4a0f-b97c-cbd5e20cdebe" variableName="integration_id"/>
-		<json-logger:logger doc:name="tablas yaml" doc:id="0aaae047-cb3e-4ea9-b8fe-3f5704dee6d5" config-ref="JSON_Logger_Config" message="tablas yaml" tracePoint="FLOW" priority="DEBUG">
-			<json-logger:content ><![CDATA[import modules::JSONLoggerModule output application/json ---
-{
-    payload: JSONLoggerModule::stringifyNonJSON(payload) 
-}]]></json-logger:content>
-		</json-logger:logger>
 		<flow-ref doc:name="get-array-of-tables-by-integration_id" doc:id="b044f845-41f1-4143-9537-907fed077310" name="get-array-of-tables-by-integration_id" />
 		<batch:job jobName="dataverse-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
 			<batch:process-records >
@@ -29,21 +23,25 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     payload: JSONLoggerModule::stringifyNonJSON(payload) 
 }]]></json-logger:content>
 					</json-logger:logger>
+					<set-variable value="#[payload]" doc:name="tabla" doc:id="07479804-6361-43b9-acf3-a6142ffa3783" variableName="tabla" />
+					<logger level="INFO" doc:name="tabla being processed" doc:id="b1afcff9-c343-40ea-b70b-18f8c6c1fd11" message='#["Processing " ++ vars.tabla as String ++ " ============================================================================================================="]' />
 					<flow-ref doc:name="dataverse-to-snowflake-Flow" doc:id="c720c960-840b-4ce4-be73-8ede3c9cf67b" name="dataverse-to-snowflake-Flow" />
 				</batch:step>
 				<batch:step name="BatchErrorHandler" doc:id="5c4d11c6-8f0b-4d16-aec1-92e7df180158" acceptPolicy="ONLY_FAILURES">
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="a9f3fac9-2f9e-44c5-917c-c586f6782b10" streaming="true">
 						<foreach doc:name="For Each" doc:id="cb96dfe2-a204-43af-b8bf-f0afab7acdc3" >
 							<set-variable value="#[vars.tablas default [] ++ [vars.tabla default 'empty table error' as String]]" doc:name="tablas" doc:id="a981a72a-792e-47f2-a295-c9ce92c0045f" variableName="tablas"/>
+							<set-variable value='#[vars.record_exception default {} ++ 
+	(vars.record.record.stepExceptions 
+		mapObject { ($$ ++ "@" ++ vars.tabla): $.message } default {"": ""}
+	)]' doc:name="record_exception" doc:id="a4ef2f2a-f111-442b-801a-9f58a7896522" variableName="record_exception" />
 						</foreach>
-						<json-logger:logger doc:name="Log failed values" doc:id="b928e9c1-6e6f-49da-940a-c630fa57a87e" config-ref="JSON_Logger_Config" message="Las siguientes tablas no pudieron ser procesadas" tracePoint="EXCEPTION" priority="ERROR" >
-							<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    payload: JSONLoggerModule::stringifyNonJSON(vars.tablas) 
-}]]]></json-logger:content>
-						</json-logger:logger>
+						<set-variable value='#[vars.record_exception 
+	pluck ("- Step: " ++ $$ ++ " - " ++ $)
+	reduce ($ ++ "\n\n" ++ $$) default ""]' doc:name="step_errors" doc:id="7b039f37-2b34-43a2-b9e5-ec307622a12a" variableName="step_errors" />
 						<set-variable value="${app.name}" doc:name="domain_notification" doc:id="8b53570b-2fb4-40b2-8de3-5ab1b999e33c" variableName="domain_notification" />
-						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
+						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String ++ "\n\nDetalle de los errores: " ++ vars.step_errors as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
+						<logger level="INFO" doc:name="Log message notification" doc:id="9b7f5e13-2a23-4d87-a22d-8d0187e76b5d" message="#[vars.message_notification]" />
 						<try doc:name="Try" doc:id="2814769a-36a4-4f4a-91ab-70541289c7cd" >
 							<cloudhub:create-notification doc:name="Create Notification" doc:id="e3f80833-721a-4755-ab1e-65e0832579c5" config-ref="CloudHub_Config" domain="#[vars.domain_notification]">
 							<cloudhub:message><![CDATA[#[vars.message_notification]]]></cloudhub:message>

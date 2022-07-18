@@ -17,6 +17,7 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 			<batch:process-records >
 				<batch:step name="Dataverse-sqlserver-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
 					<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
+					<logger level="INFO" doc:name="tabla being processed" doc:id="5cb1518b-d233-42bc-8329-334c006aba36" message='#["Processing " ++ vars.tabla as String ++ " ============================================================================================================="]'/>
 					<flow-ref doc:name="dataverse-sqlserver-to-bronze-Flow" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="dataverse-sqlserver-to-bronze-Flow"/>
 					<flow-ref doc:name="bronze-to-silver-Flow" doc:id="b16ec39f-969d-42cd-8f46-b18aab23f7ce" name="bronze-to-silver-Flow" />
 					<flow-ref doc:name="silver-to-gold-Flow" doc:id="c0ccf0c3-663d-4844-8545-8b5c9a30eb78" name="silver-to-gold-Flow" />
@@ -26,15 +27,12 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="a9f3fac9-2f9e-44c5-917c-c586f6782b10" streaming="true">
 						<foreach doc:name="For Each" doc:id="cb96dfe2-a204-43af-b8bf-f0afab7acdc3" >
 							<set-variable value="#[vars.tablas default [] ++ [vars.tabla default 'empty table error' as String]]" doc:name="tablas" doc:id="a981a72a-792e-47f2-a295-c9ce92c0045f" variableName="tablas"/>
+							<set-variable value='#[vars.record_exception default {} ++ &#10;	(vars.record.record.stepExceptions &#10;		mapObject { ($$ ++ "@" ++ vars.tabla): $.message } default {"": ""}&#10;	)]' doc:name="record_exception" doc:id="2c1e5e09-0546-4e11-9d5a-9822cd21f88a" variableName="record_exception"/>
 						</foreach>
-						<json-logger:logger doc:name="Log failed values" doc:id="b928e9c1-6e6f-49da-940a-c630fa57a87e" config-ref="JSON_Logger_Config" message="Las siguientes tablas no pudieron ser procesadas" tracePoint="EXCEPTION" priority="ERROR" >
-							<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    payload: JSONLoggerModule::stringifyNonJSON(vars.tablas) 
-}]]]></json-logger:content>
-						</json-logger:logger>
+						<set-variable value='#[vars.record_exception &#10;	pluck ("- Step: " ++ $$ ++ " - " ++ $)&#10;	reduce ($ ++ "\n\n" ++ $$) default ""]' doc:name="step_errors" doc:id="6cb25faa-7c5a-44fb-992c-a646352aa552" variableName="step_errors"/>
 						<set-variable value="${app.name}" doc:name="domain_notification" doc:id="8b53570b-2fb4-40b2-8de3-5ab1b999e33c" variableName="domain_notification" />
-						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
+						<set-variable value='#["ERROR " ++ p("app.name") ++ ": No se pudieron procesar las siguientes tablas: " ++ (vars.tablas joinBy ", ") as String ++ "\n\nDetalle de los errores: " ++ vars.step_errors as String]' doc:name="message_notification" doc:id="fcbc6903-7cef-4cfd-860d-49a7fffb2612" variableName="message_notification" />
+						<logger level="INFO" doc:name="Log message notification" doc:id="c4da09e2-7f48-473e-8adf-936193f186b1" message='#[vars.message_notification]' />
 						<try doc:name="Try" doc:id="2d7ff03a-abdc-4aab-957e-7ce49cd00bdd" >
 							<cloudhub:create-notification doc:name="Create Notification" doc:id="e3f80833-721a-4755-ab1e-65e0832579c5" config-ref="CloudHub_Config" domain="#[vars.domain_notification]">
 							<cloudhub:message><![CDATA[#[vars.message_notification]]]></cloudhub:message>
