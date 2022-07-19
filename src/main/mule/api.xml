@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<flow-ref doc:name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="fe39b027-5272-4b6e-a3ab-1bfa213fee03" name="dataverse-sqlserver-to-snowflake-postFlow" />
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="3bf68fa2-529f-49aa-a448-8f275168dfbd" >
-				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" doc:id="202da18c-d89b-426f-8ab4-ff5c231c155a" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" >
+				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" doc:id="202da18c-d89b-426f-8ab4-ff5c231c155a" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-sqlserver-to-snowflake" tracePoint="EXCEPTION" priority="ERROR">
 					<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     payload: JSONLoggerModule::stringifyNonJSON(error) 
@@ -58,7 +58,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="e644e7d4-0980-44b5-a16a-7a2b7f9df666" name="dataverse-to-snowflake-postFlow" />
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="e9bd65fe-2a63-42d8-9eb6-5a7cf4a68c6d" >
-				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-to-snowflake" doc:id="5c8c4af0-3ea4-44d0-b367-9c3c0775514b" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-to-snowflake" >
+				<json-logger:logger doc:name="Error al ejecutar el batch job dataverse-to-snowflake" doc:id="5c8c4af0-3ea4-44d0-b367-9c3c0775514b" config-ref="JSON_Logger_Config" message="Error al ejecutar el batch job dataverse-to-snowflake" tracePoint="EXCEPTION" priority="ERROR">
 					<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
     payload: JSONLoggerModule::stringifyNonJSON(error) 

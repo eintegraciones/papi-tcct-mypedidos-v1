@@ -18,14 +18,8 @@ import fromBase64 from dw::core::Binaries
 ---
 fromBase64(payload.file.bytes) as Binary]" doc:name="Set payload to parquet bytes" doc:id="98c45902-12df-4094-b348-87375f32b936" />
 		<flow-ref doc:name="parquet-bytes-to-multipart" doc:id="f8c011ab-2637-4fdb-b869-6d37bd197ec0" name="parquet-bytes-to-multipart" />
-		<http:request method="POST" doc:name="POST /api/v1/datalake-silver/{tabla}" doc:id="c2d876dc-c931-41bd-9bcb-970e429a163c" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-silver/" ++ vars.tabla as String]'>
+		<http:request method="POST" doc:name="POST /api/v1/datalake-silver/{tabla}" doc:id="c2d876dc-c931-41bd-9bcb-970e429a163c" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-silver/" ++ vars.tabla as String]' sendBodyMode="AUTO" requestStreamingMode="AUTO">
 			<reconnect frequency="5000" count="3" />
-			<http:headers ><![CDATA[#[output application/java
----
-{
-	"Content-Type" : "multipart/form-data; boundary=--------------------------" ++ vars.boundary as String,
-	"Content-Length": vars.content_length as String
-}]]]></http:headers>
 		</http:request>
 		<json-logger:logger doc:name="END: Bronze to silver" doc:id="ada45afd-25f3-4f44-8fe7-1729673dc49b" config-ref="JSON_Logger_Config" message="END: Bronze to silver" tracePoint="END"/>
 	</sub-flow>

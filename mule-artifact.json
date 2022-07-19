@@ -1,6 +1,7 @@
 {
   "minMuleVersion": "4.4.0",
   "secureProperties": [
+  	"anypoint.platform.client_secret",
   	"dataverse.client_secret",
   	"datalake.client_secret",
   	"snowflake.client_secret",

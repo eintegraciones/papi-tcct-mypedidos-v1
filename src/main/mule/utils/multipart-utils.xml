@@ -4,12 +4,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	<sub-flow name="parquet-bytes-to-multipart" doc:id="3c77ffe7-af80-4c90-8cb4-89014467cebd" >
-		<set-variable value="#[sizeOf(payload)]" doc:name="content_length" doc:id="c8251f97-e0d7-429c-b22f-ceeeb039a24b" variableName="content_length" />
-		<set-variable value="#[%dw 2.0
-import dw::module::Multipart
-output application/json
----
-Multipart::generateBoundary(25)]" doc:name="boundary" doc:id="a1a55d34-6674-4c56-9e41-c06e58076ff9" variableName="boundary" />
 		<set-payload value='#[%dw 2.0
 import dw::module::Multipart
 input payload application/octet-stream
