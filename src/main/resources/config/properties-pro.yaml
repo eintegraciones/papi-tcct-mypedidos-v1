@@ -1,0 +1,37 @@
+dataverse:
+  host: "sapi-tcct-dataverse-v1-pro.ir-e1.cloudhub.io"
+  port: 
+    insecure: "80"
+    secure: "443"
+  client_id: "c06620083a3b4c06bea14addb666b8b3"
+  client_secret: ""
+
+datalake:
+  host: "sapi-tcct-datalake-v1-pro.ir-e1.cloudhub.io"
+  port: 
+    insecure: "80"
+    secure: "443"
+  client_id: "c06620083a3b4c06bea14addb666b8b3"
+  client_secret: ""
+  
+snowflake:
+  host: "sapi-tcct-snowflake-v1-pro.ir-e1.cloudhub.io"
+  port: 
+    insecure: "80"
+    secure: "443"
+  client_id: "c06620083a3b4c06bea14addb666b8b3"
+  client_secret: ""
+  
+sqlserver:
+  host: "sapi-tcct-sql-server-v1-pro.ir-e1.cloudhub.io"
+  port: 
+    insecure: "80"
+    secure: "443"
+  client_id: "c06620083a3b4c06bea14addb666b8b3"
+  client_secret: ""
+
+cloudhub:
+  env_id: "0b12e2ae-f34d-4e20-93fa-3057a417ade4"
+  client_id: "0fd877431f3c4ffdb7af1ae2c6021006"
+  # Por seguridad, se informa por variable de entorno
+  client_secret: ""
