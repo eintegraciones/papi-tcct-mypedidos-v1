@@ -5,11 +5,19 @@ tablas:
       "mc2plus_lineasAdquira",
       "mc2plus_pedidos",
       "mc2plus_codigo_sherpa",
-      "mc2plus_comentariosoferta",
-      "mc2plus_concepto_facturable",
-      "mc2plus_elementopep",
-      "mc2plus_fila_oferta",
-      "mc2plus_historialreleasesplus",
+      "mc2plus_comentariosofertas",
+      "mc2plus_concepto_facturables",
+      "mc2plus_elementopeps",
+      "mc2plus_fila_ofertas",
+      "mc2plus_historialreleasespluses",
+      "mc2plus_mantenimiento_mc2pluses",
+      "mc2plus_ofertas",
+      "mc2plus_planificacionestimadas",
+      "mc2plus_planificacionreals",
+      "mc2plus_proyectos",
+      "mc2plus_registro_sherpas",
+      "mc2plus_tabla_precioses",
+      "mc2plus_traducciones_sherpas",
       "mc2_maestro_perfils",
       "mc2plus_maestro_plus_ambitos",
       "mc2plus_maestro_plus_cecos",
@@ -30,7 +38,14 @@ tablas:
       "mc2plus_maestro_plus_sociedads",
       "mc2plus_maestro_plus_tramitadors",
       "mc2plus_cargamasivaErrores",
-      "mc2plus_datosCarga"
+      "mc2plus_datosCarga",
+      "mc2plus_catalogos",
+      "mycat_mantenimientocatalogos",
+      "mc2plus_maestro_plus_judiricas",
+      "mc2plus_maestro_plus_paises", 
+      "mc2plus_maestro_plus_tipocompras",
+      "mc2plus_maestro_plus_tipologiasherpas",
+      "mc2plus_maestro_plus_ud_frecuencias"
     ]
       
     # Mapeos de tablas
@@ -290,6 +305,271 @@ tablas:
       timezoneruleversionnumber: "time_zone_rule_version_number"
       utcconversiontimezonecode: "utc_conversion_time_zone_code"
       versionnumber: "version_number"
+    
+    mc2plus_mantenimiento_mc2pluses:
+      tablename: "mc2plus_mantenimiento_mc2plus"
+      importsequencenumber: "import_sequence_number"
+      mc2plus_mantenimientoactivo_mycatalogo: "mantenimiento_activo_mycatalogo"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      _owninguser_value: "owning_user"
+      mc2plus_mantenimientoactivo_tramitacion: "mantenimiento_activo_tramitacion"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      versionnumber: "version_number"
+      statecode: "status_reason"
+      createdon: "created_on"
+      statuscode: "status"
+      _modifiedby_value: "modified_by"
+      modifiedon: "modified_on"
+      mc2plus_name: "name"
+      _createdby_value: ·created_by"
+      _owningbusinessunit_value: "owning_business_unit"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      _ownerid_value: "owner"
+      mc2plus_mantenimiento_mc2plusid: "mantenimiento_mc2plus"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _createdonbehalfby_value: "created_by_delegate"
+    
+    mc2plus_ofertas: # pendiente de revision por conflicto
+      tablename: "mc2plus_oferta"
+      importsequencenumber: "import_sequence_number"
+      mc2plus_cargada: "cargada"
+      mc2plus_fecha_creacion: "fecha_creacion"
+      #exchangerate: *****
+      mc2plus_importe_total: "importe_total"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      mc2plus_url_sharepoint: "url_sharepoint"
+      mc2plus_importe_pedidos_recibido: "importe_pedidos_recibo"
+      statecode: "status_reason"
+      mc2plus_fecha_finalizacion: "fecha_finalizacion" 
+      statuscode: "status"
+      _createdby_value: "created_by"
+      mc2plus_importe_pedidos_tramitado: "importe_pedidos_tramitado"
+      _owningbusinessunit_value: "owning_business_unit"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      mc2plus_sherpacargado: "sherpa_cargado"
+      mc2plus_ofertaid: "oferta_id"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _createdonbehalfby_value: "created_by_delegate"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      _owninguser_value: "owning_user"
+      #_transactioncurrencyid_value: *****
+      versionnumber: "version_number"
+      createdon: "created_on"
+      _mc2plus_tramitador_value: "tramitador"
+      _modifiedby_value: "modified_by"
+      mc2plus_oferta: "oferta"
+      modifiedon: "modified_on"
+      mc2plus_numero_pedidos: "numero_pedidos"
+      _ownerid_value: "owner"
+      mc2plus_id_sherpa: "id_sherpa"
+    
+    mc2plus_planificacionestimadas:
+      tablename: "mc2plus_planificacionestimada"
+      importsequencenumber: "import_sequence_number"
+      mc2plus_familia: "familia"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code" 
+      statecode: "status_reason"
+      statuscode: "status"
+      mc2plus_fecha: "fecha"
+      _createdby_value: "created_by"
+      _owningbusinessunit_value: "owning_business_unit"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      mc2plus_planificacionestimadaid: "planificacion_estimada" 
+      mc2plus_elementopep: "elemento_pep"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _createdonbehalfby_value: "created_by_delegate"
+      mc2plus_nivel: nivel"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      mc2plus_recurso: "recurso"
+      _owninguser_value: "owning_user"
+      versionnumber: "version_number"
+      createdon: "created_on"
+      mc2plus_coste: "coste"
+      _modifiedby_value: "modified_by"
+      modifiedon: "modified_on"
+      mc2plus_ingreso: "ingreso"
+      mc2plus_descripcion: "descripcion"
+      _mc2plus_oferta_value: "oferta"
+      mc2plus_codigo_proyecto: "codigo_proyecto"
+      _ownerid_value: "owner"
+    
+    mc2plus_planificacionreals:
+      tablename: "mc2plus_planificacionreal"
+      importsequencenumber: "import_sequence_number"
+      _mc2plus_oferta_value: "oferta"
+      mc2plus_exportadosap: "exportado_sap"
+      modifiedon: "modified_on"
+      statuscode: "status"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      versionnumber: "version_number"
+      mc2plus_ingreso: "ingreso"
+      mc2plus_planificacionrealid: "planificacion_real"
+      mc2plus_elementopep: "elemento_pep"
+      _createdonbehalfby_value: "created_by_delegate"
+      _owninguser_value: "owning_user"
+      _owningbusinessunit_value: "owning_business_unit"
+      _modifiedby_value: "modified_by"
+      mc2plus_fecha: "fecha"
+      overriddencreatedon: "record_created_on"
+      _createdby_value: "created_by"
+      mc2plus_descripcion: "descripcion"
+      mc2plus_nivel: "nivel"
+      mc2plus_pedido: "pedido"
+      _owningteam_value: "owning_team"
+      createdon: "created_on"
+      mc2plus_coste: "coste"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _ownerid_value: "owner"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      mc2plus_creacionpedidoventa: "creacion_pedido_venta"
+      statecode: "status_reason"
+    
+    mc2plus_proyectos:
+      tablename: "mc2plus_proyecto"
+      importsequencenumber: "import_sequence_number"
+      mc2plus_importe_total: "importe_total"
+      _mc2plus_sociedad_value: "sociedad"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      statecode: "status_reason"
+      statuscode: "status"
+      _createdby_value: "created_by"
+      _owningbusinessunit_value: "owning_business_unit"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      mc2plus_fecha_fin_ap_proyecto: "fecha_fin_ap_proyecto"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _createdonbehalfby_value: "created_by_delegate"
+      _mc2plus_responsable_proyecto_value: "responsable_proyecto"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      _owninguser_value: "owning_user"
+      _mc2plus_perfil_value: "perfil"
+      mc2plus_fecha_inicio_ap_proyecto: "fecha_inicio_ap_proyecto"
+      versionnumber: "version_number"
+      mc2plus_cliente_gestion_id: "cliente_gestion_id"
+      createdon: "created_on"
+      mc2plus_descripcion_proyecto: "descripcion_proyecto"
+      mc2plus_cliente_facturacion_id: "cliente_facturacion_id"
+      _mc2plus_moneda_proyecto_value: "moneda_proyecto"
+      _modifiedby_value: "modified_by"
+      modifiedon: "modified_on"
+      _mc2plus_ceco_value: "ceco"
+      mc2plus_proyectoid: "proyecto"
+      _mc2plus_segmentaciondegestion_value: "segmentacion_de_gestion"
+      mc2plus_ap: "ap"
+      _mc2plus_oferta_value: "oferta"
+      mc2plus_codigo_proyecto: "codigo_proyecto"
+      _ownerid_value: "owner"
+    
+    mc2plus_registro_sherpas:
+      tablename: "mc2plus_registro_sherpa"
+      mc2plus_fase: "fase"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      statuscode: "status"
+      mc2plus_cantidad: "cantidad"
+      mc2plus_producto: "producto"
+      versionnumber: "version_number"
+      statecode: "status_reason"
+      mc2plus_sa: "sa"
+      _createdonbehalfby_value: "created_by_delegate"
+      mc2plus_serviciocomercial: "servicio_comercial"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      importsequencenumber: "import_sequence_number"
+      _mc2plus_oferta_value: "oferta"
+      mc2plus_registro_sherpaid: "registro_sherpa_id"
+      modifiedon: "modified_on"
+      _owningbusinessunit_value: "owning_business_unit"
+      _ownerid_value: "owner"
+      mc2plus_idproducto: "id_producto"
+      _owningteam_value: "owning_team"
+      createdon: "created_on"
+      mc2plus_registrosherpa: "registro_sherpa"
+      overriddencreatedon: "record_created_on"
+      _modifiedby_value: "modified_by"
+      _createdby_value: "created_by"
+      mc2plus_elementopep: "elemento_pep"
+      _owninguser_value: "owning_user"
+      mc2plus_ingreso: "ingreso"
+    
+    mc2plus_tabla_precioses:
+      tablename: "mc2plus_tabla_precios"
+      mc2plus_precio_cesion_unitario_original: "precio_cesion_unitario_original"
+      importsequencenumber: "import_sequence_number"
+      _mc2plus_id_concepto_facturable_value: "id_concepto_facturable"
+      mc2plus_implantacion: "implantacion"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      statecode: "status_reason"
+      mc2plus_id_naturaleza: "id_naturaleza"
+      mc2plus_descuento_sobre_precio_cesion: "descuento_sobre_precio_cesion"
+      statuscode: "status"
+      mc2plus_markup: "markup"
+      mc2plus_id_economico: "id_economico"
+      mc2plus_naturaleza: "naturaleza"
+      _createdby_value: "created_by"
+      mc2plus_id_tabla_precios: "id_tabla_precios"
+      _owningbusinessunit_value: "owning_business_unit"
+      mc2plus_tabla_precios: "tabla_precios"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      mc2plus_margen: "margen"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      _createdonbehalfby_value: "created_by_delegate"
+      mc2plus_precio_cesion_unitario: "precio_cesion_unitario"
+      mc2plus_precio_total: "precio_total"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      _owninguser_value: "owning_user"
+      versionnumber: "version_number"
+      mc2plus_proveedor: "proveedor"
+      createdon: "created_on"
+      _modifiedby_value: "modified_by"
+      modifiedon: "modified_on"
+      mc2plus_tabla_preciosid: "tabla_precios_id"
+      _mc2plus_oferta_value: "oferta"
+      _ownerid_value: "owner"
+      mc2plus_coste_unitario: "coste_unitario"
+    
+    mc2plus_traducciones_sherpas: # pendiente de revision por conflicto
+      tablename: "mc2plus_traducciones_sherpa"
+      importsequencenumber: "import_sequence_number"
+      mc2plus_unidades: "unidades"
+      mc2plus_implantacion: "implantacion"
+      utcconversiontimezonecode: "utc_conversion_time_zone_code"
+      mc2plus_meses: "meses"
+      #mc2plus_periodicidad: *****
+      _mc2plus_idproducto_value: "id_producto"
+      #mc2plus_ratio: *****
+      statecode: "status_reason"
+      statuscode: "status"
+      mc2plus_traducciones_sherpaid: "traducciones_sherpa"
+      mc2plus_servicio: "servicio"
+      _createdby_value: "created_by"
+      mc2plus_id_tabla_precios: "id_tabla_precios"
+      _owningbusinessunit_value: "owning_business_unit"
+      overriddencreatedon: "record_created_on"
+      _owningteam_value: "owning_team"
+      mc2plus_id_fila_oferta: "id_fila_oferta"
+      _modifiedonbehalfby_value: "modified_by_delegate"
+      mc2plus_economic_id: "economic_id"
+      mc2plus_caracteristica_valor: "caracteristica_valor"
+      _createdonbehalfby_value: "created_by_delegate"
+      mc2plus_elemento_pep: "elemento_pep"
+      mc2plus_precio_total: "precio_total"
+      timezoneruleversionnumber: "time_zone_rule_version_number"
+      mc2plus_servicio_id: "servicio_id"
+      _owninguser_value: "owning_user"
+      mc2plus_subactividad: subactividad"
+      mc2plus_producto: "producto"
+      versionnumber: "version_number"
+      createdon: "created_on"
+      _modifiedby_value: "modified_by"
+      modifiedon: "modified_on"
+      _mc2plus_modalidadpago_value: "modalidad_pago"
+      _mc2plus_oferta_value: "oferta"
+      _ownerid_value: "owner"
+      mc2plus_pedido: "pedido"
     
     # Maestros ------------------------------------------------------------------------------------------------------------------------------
     mc2_maestro_perfils: # pendiente de revision por conflicto
@@ -806,5 +1086,195 @@ tablas:
       User_Carga: "USER_CARGA"
     
     #Tablas Operativas Dataverse ------------------------------------------------------------------------------------------------------------------------------
-    
+
+    mc2plus_catalogos:
+      tablename: mc2plus_catalogo
+      importsequencenumber: import_sequence_number
+      _mc2plus_moneda_precio_value: moneda_precio
+      mycat_juridica: juridica
+      _mc2plus_familia_tcct_value: familia_tcct 
+      mc2plus_coste_modi: coste_modi
+      mc2plus_boc_pint_comms: boc_pint_comms
+      mc2plus_boc_pint_op: boc_pint_op
+      statuscode: status
+      mc2plus_boc_pext: boc_pext
+      _owningteam_value: owning_team
+      _modifiedonbehalfby_value: modified_by_delegate
+      _mc2plus_ud_frecuencia_value: ud_frecuencia
+      timezoneruleversionnumber: time_zone_rule_version_number
+      mc2plus_boc_sspp: boc_sspp
+      mc2plus_boc_pint_vir: boc_pint_vir
+      mc2plus_boc_pint_alo: boc_pint_alo
+      mc2plus_boc_24x7: boc_24x7
+      modifiedon: modified_on
+      _mc2plus_tipo_compra_value: tipo_compra
+      mc2plus_boc_pint_net: boc_pint_net
+      _mycat_id_servicio_comercial_value: id_servicio_comercial 
+      mc2plus_producto_descripcion: producto_descripcion
+      mc2plus_coste_otros: coste_otros
+      mc2plus_fecha_modificacion: fecha_modificacion
+      mc2plus_pais: pais
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      mc2plus_coste_compras: coste_compras
+      mc2plus_boc_pint: boc_pint
+      statecode: status_reason
+      mc2plus_coste_directo: coste_directo
+      mc2plus_fecha_aprobacion: fecha_aprobacion
+      _mc2plus_modalidad_pago_value: modalidad_pago
+      _mc2plus_tipologa_sherpa_value: tipologia_sherpa
+      _createdby_value: created_by
+      mc2plus_estado: estado
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      mc2plus_precio_transferencia: precio_transferencia
+      mycat_servicio_comercial: servicio_comercial
+      _createdonbehalfby_value: created_by_delegate
+      mc2plus_catalogoid: catalogo
+      mc2plus_boc_pint_alm_bup: boc_pint_alm_bup
+      _owninguser_value: owning_user
+      versionnumber: version_number
+      mc2plus_coste_moin: coste_moin
+      createdon: created_on
+      _mc2plus_sap_id_value: sap_id
+      mc2plus_user_aprobacion: user_aprobacion
+      _modifiedby_value: modified_by
+      mc2plus_user_modificacion: user_modificacion
+      _mc2plus_moneda_coste_value: moneda_costes
+      mc2plus_economico_id: economicoid
+      _ownerid_value: owner
+      mc2plus_ambito: ambito
+      
+    mycat_mantenimientocatalogos:
+      tablename: mycat_matenimientocatalogo
+      importsequencenumber: import_sequence_number
+      timezoneruleversionnumber: time_zone_rule_version_number
+      mycat_mantenimientocatalogoid: mantenimiento_catalogo
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      createdon: created_on
+      mycat_mantenimientoactivo_catalogo: mantenimientoactivo_catalogo 
+      mycat_name: name
+      statuscode: status
+      _modifiedby_value: modified_by
+      modifiedon: modified_on
+      _createdby_value: created_by
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      _ownerid_value: owner
+      _modifiedonbehalfby_value: modified_by_delegate
+      _createdonbehalfby_value: created_by_delegate
+      
     #Maestros ------------------------------------------------------------------------------------------------------------------------------
+    
+    mc2plus_maestro_plus_judiricas:
+      tablename: mc2plus_maestro_plus_juridica
+      importsequencenumber: import_sequence_number
+      timezoneruleversionnumber: time_zone_rule_version_number
+      mc2plus_judirica: juridica
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      createdon: created_on
+      statuscode: status
+      _modifiedby_value: modified_by
+      modifiedon: modified_on
+      _createdby_value: created_by
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      mc2plus_maestro_plus_judiricaid: maestro_plus_juridica
+      _ownerid_value: owner
+      _modifiedonbehalfby_value: modified_by_delegate 
+      _createdonbehalfby_value:  created_by_delegate
+    
+    mc2plus_maestro_plus_paises:
+      tablename: mc2plus_maestro_plus_pais
+      importsequencenumber: import_sequence_number
+      timezoneruleversionnumber: time_zone_rule_version_number
+      mc2plus_pais: pais
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      createdon: created_on
+      statuscode: status
+      _modifiedby_value: modified_by
+      modifiedon: modified_on
+      _createdby_value: created_by
+      mc2plus_maestro_plus_paisid: maestro_plus_pais
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      _ownerid_value: owner
+      _modifiedonbehalfby_value: modified_by_delegate 
+      _createdonbehalfby_value: created_by_delegate
+      
+    mc2plus_maestro_plus_tipocompras:
+      tablename: mc2plus_maestro_plus_tipocompra
+      importsequencenumber: import_sequence_number
+      timezoneruleversionnumber: time_zone_rule_version_number
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      mc2plus_tipo_compra: tipo_compra
+      createdon: created_on
+      statuscode: status
+      _modifiedby_value: modified_by
+      mc2plus_maestro_plus_tipocompraid: maestro_plus_tipocompra 
+      modifiedon: modified_on
+      _createdby_value: created_by
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      _ownerid_value: owner
+      _modifiedonbehalfby_value: modified_by_delegate 
+      _createdonbehalfby_value: created_by_delegate
+      
+    mc2plus_maestro_plus_tipologiasherpas:
+      tablename: mc2plus_maestro_plus_tipologiasherpa
+      importsequencenumber: import_sequence_number
+      timezoneruleversionnumber: time_zone_rule_version_number
+      mc2plus_sherpa: sherpa
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      createdon: created_on
+      statuscode: status
+      _modifiedby_value: modified_by
+      modifiedon: modified_on
+      _createdby_value: created_by
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      mc2plus_maestro_plus_tipologiasherpaid: maestro_plus_tipologiasherpa
+      _ownerid_value: owner
+      _modifiedonbehalfby_value: modified_by_delegate 
+      _createdonbehalfby_value: created_by_delegate
+      
+    mc2plus_maestro_plus_ud_frecuencias:
+      tablename: mc2plus_maestro_plus_ud_frecuencia
+      importsequencenumber: import_sequence_number
+      mc2plus_ud_frecuencia: ud_frecuencia
+      timezoneruleversionnumber: time_zone_rule_version_number
+      _owninguser_value: owning_user
+      utcconversiontimezonecode: utc_conversion_time_zone_code
+      versionnumber: version_number
+      statecode: status_reason
+      createdon: created_on
+      statuscode: status
+      _modifiedby_value: modified_by
+      modifiedon: modified_on
+      _createdby_value: created_by
+      _owningbusinessunit_value: owning_business_unit
+      overriddencreatedon: record_created_on
+      _owningteam_value: owning_team
+      _ownerid_value: owner
+      mc2plus_maestro_plus_ud_frecuenciaid: maestro_plus_ud_frecuencia
+      _modifiedonbehalfby_value: modified_by_delegate
+      _createdonbehalfby_value: created_by_delegate
