@@ -94,7 +94,7 @@ public class JsonToAvroSchemaConvertor {
 	
 	public static byte[] getBytesOfJsonAsParquet(String tableName, List<Map<String, Object>> data) {
 		String tmpPath = "tmp/" + tableName + System.currentTimeMillis() + ".parquet";
-		System.out.println("JSON INPUT: " + data.toString());
+		System.out.println("JSON INPUT: " + data.toString().substring(0,500));
 		Schema avroSchema = toAvroSchema(tableName, data);
 		toParquet(tmpPath, data, avroSchema);
 		byte[] resp = null;

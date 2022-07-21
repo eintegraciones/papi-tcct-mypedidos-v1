@@ -46,7 +46,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 			<http:default-header key="client_secret" value='#[p("datalake.client_secret")]' />
 		</http:default-headers>
 	</http:request-config>
-	<http:request-config name="Snowflake_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ebb180e0-d7e5-4596-b6e4-0411c237b62f" basePath="/api/v1" >
+	<http:request-config name="Snowflake_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ebb180e0-d7e5-4596-b6e4-0411c237b62f" basePath="/api/v1" responseTimeout="120000">
 		<http:request-connection host="${snowflake.host}" port="${snowflake.port.secure}" protocol="HTTPS"/>
 		<http:default-headers >
 			<http:default-header key="client_id" value='#[p("snowflake.client_id")]' />

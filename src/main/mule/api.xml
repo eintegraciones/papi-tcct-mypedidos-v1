@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		</scheduler>
 		<flow-ref doc:name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="93d78ef8-3f54-45ea-a764-2b280e1bc288" name="dataverse-sqlserver-to-snowflake-postFlow" />
 	</flow>
-	<flow name="scheduled_dataverse-to-snowflake" doc:id="24934d06-4405-4ef7-bef0-f81732dc8133">
+	<flow name="scheduled_dataverse-to-snowflake" doc:id="24934d06-4405-4ef7-bef0-f81732dc8133" initialState="stopped">
 		<scheduler doc:name="Scheduler 618" doc:id="b980790c-3841-4ce2-bbe5-3e32a0ae1cfb">
 			<scheduling-strategy>
 				<cron expression="${scheduler.618.cron.expression}" timeZone="${scheduler.618.cron.timeZone}" />
@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		</scheduler>
 		<flow-ref doc:name="dataverse-to-snowflake-postFlow" doc:id="6169b131-479f-44fd-9f7f-9fc58ac56702" name="dataverse-to-snowflake-postFlow"/>
 	</flow>
-	<flow name="papi-tcct-mypedidos-main">
+	<flow name="papi-tcct-mypedidos-main" initialState="stopped">
         <http:listener path="${apiPath}" config-ref="HTTPS_Listener_config_standard">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
@@ -29,7 +29,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
         </http:listener>
         <apikit:router config-ref="papi-tcct-mypedidos-config" />
     </flow>
-	<flow name="papi-tcct-mypedidos-console">
+	<flow name="papi-tcct-mypedidos-console" initialState="stopped">
         <http:listener path="/console/*" config-ref="HTTPS_Listener_config_standard">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>

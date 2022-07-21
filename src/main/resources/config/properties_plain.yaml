@@ -23,6 +23,10 @@ keystore:
    path: "config/keystore-tls-tcct.jks"
    password: "tcct@tcct"
    keyPassword: "tcct@tcct"
+   
+# Pagination for sqlserver requests
+pagination:
+  itemsPerPage: "5000"
 
 # Scheduler configuration
 scheduler:

@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<sub-flow name="sqlserver-paginated-call" doc:id="4fa133a3-7a35-46df-9d61-f136fcb7619a" >
-		<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]'>
+		<http:request method="HEAD" doc:name="HEAD /api/v1/sqlserver/{tabla}" doc:id="09c62e7f-f947-4cff-8458-6a85741af129" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]' target="table_count" targetValue='#[attributes.headers["x-total-count"] as Number default 0]'>
+			<reconnect frequency="5000" count="3" />
+		</http:request>
+		<set-variable value='#[var itemsPerPage = p("pagination.itemsPerPage") as Number default 5000&#10;---&#10;{&#10;	"itemsPerPage": itemsPerPage,&#10;	"totalPages": ceil(vars.table_count as Number / itemsPerPage)&#10;}]' doc:name="pagination" doc:id="e8ce3772-6ecc-4877-a484-e5a2b45b7605" variableName="pagination"/>
+		<foreach doc:name="For Each" doc:id="f61fac85-bc23-407c-b773-066a9748984d" collection="#[%dw 2.0 &#10;output application/json&#10;fun prepareList(list: Array, maxSize: Number) = &#10;    if(sizeOf(list) &gt;= maxSize )&#10;        list&#10;    else&#10;        prepareList(list ++ [(sizeOf(list) + 1) as Number], maxSize)&#10;---&#10;prepareList([], vars.pagination.totalPages as Number)]">
+			<set-variable value="#[payload]" doc:name="page" doc:id="97ccba2d-14dc-4f4a-8276-8cfd5956ccae" variableName="page"/>
+			<set-variable value="#[output text/plain&#10;---&#10;(vars.page as Number - 1) * vars.pagination.itemsPerPage as Number]" doc:name="offset" doc:id="eb699c3f-dbfe-4900-b2d0-9fdfc48a1cd5" variableName="offset"/>
+			<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]'>
 					<reconnect frequency="5000" count="3" />
+				<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"offset" : vars.offset default 0,
+	"limit" : vars.pagination.itemsPerPage default 100
+}]]]></http:query-params>
 				</http:request>
+			<set-variable value="#[vars.totalRecords default [] ++ payload.response]" doc:name="totalRecords" doc:id="37a36efa-855f-49ae-9043-ad8a051057dd" variableName="totalRecords"/>
+			<logger level="INFO" doc:name="Count" doc:id="ed2af8ce-2fdf-4df1-95b1-c3dabd63851a" message='#["SQL Server records saved: " ++ sizeOf(vars.totalRecords) as Number]'/>
+		</foreach>
+		<set-payload value='#[output application/json&#10;---&#10;{&#10;	"response": vars.totalRecords&#10;}]' doc:name="to totalRecords" doc:id="b758d83b-0176-4ae9-b421-96dd7bbbffc6" />
+		<remove-variable doc:name="totalRecords" doc:id="43da6b37-8196-4808-936a-890bab94872f" variableName="totalRecords"/>
 	</sub-flow>
 </mule>
