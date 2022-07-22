@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 				<flow-ref doc:name="sqlserver-paginated-call" doc:id="7f3c36dd-b2c3-4f04-95fd-95ebf2a6fcc6" name="sqlserver-paginated-call" />
 			</when>
 			<otherwise >
-				<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="1ffabfd8-74b0-47e6-8c0a-533c26f66c07" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
+				<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="1ffabfd8-74b0-47e6-8c0a-533c26f66c07" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]' responseTimeout="120000">
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 			</otherwise>
@@ -31,7 +31,7 @@ filterObject ((value, key, index) -&gt;
 ))]' doc:name="To Json with etags filtered" doc:id="9594f3a0-8e4e-4d2e-b29a-2e094a2932ba" />
 		<flow-ref doc:name="json-payload-to-parquet" doc:id="7bf54b6d-a474-4a1c-8d6d-5126279bf2c5" name="json-payload-to-parquet"/>
 		<flow-ref doc:name="parquet-bytes-to-multipart" doc:id="6d6a68ac-4c8d-4819-86c8-289b30b12eed" name="parquet-bytes-to-multipart"/>
-		<http:request method="POST" doc:name="POST /api/v1/datalake-bronze/{tabla}" doc:id="03065524-dd33-4486-ab9d-5e269ce82600" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.tabla as String]' sendBodyMode="ALWAYS" requestStreamingMode="AUTO">
+		<http:request method="POST" doc:name="POST /api/v1/datalake-bronze/{tabla}" doc:id="03065524-dd33-4486-ab9d-5e269ce82600" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.tabla as String]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS">
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<set-payload value='""' doc:name="Empty payload to liberate memory" doc:id="7c756162-bfce-443f-bc81-87dffcfa7130" />

@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_f1ad8570_0fb9_4f53_9f3a_c8ddfa23844a_Input_Variables_date = {|
+  year: String {"format": "y"}, 
+  month: String {"format": "MM"}, 
+  day: String {"format": "dd"}, 
+  concatenated: String
+|}
+

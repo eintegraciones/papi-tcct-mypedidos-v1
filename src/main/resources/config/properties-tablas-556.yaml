@@ -4,7 +4,7 @@ tablas:
     listado: [
       "mc2plus_lineasAdquira",
       "mc2plus_pedidos",
-      "mc2plus_codigo_sherpa",
+      "mc2plus_codigo_sherpas",
       "mc2plus_comentariosofertas",
       "mc2plus_concepto_facturables",
       "mc2plus_elementopeps",
@@ -37,6 +37,7 @@ tablas:
       "mc2plus_maestro_plus_servicio_comercials",
       "mc2plus_maestro_plus_sociedads",
       "mc2plus_maestro_plus_tramitadors",
+      "mc2plus_cargamasiva",
       "mc2plus_cargamasivaErrores",
       "mc2plus_datosCarga",
       "mc2plus_catalogos",
@@ -321,7 +322,7 @@ tablas:
       _modifiedby_value: "modified_by"
       modifiedon: "modified_on"
       mc2plus_name: "name"
-      _createdby_value: ·created_by"
+      _createdby_value: "created_by"
       _owningbusinessunit_value: "owning_business_unit"
       overriddencreatedon: "record_created_on"
       _owningteam_value: "owning_team"
@@ -330,16 +331,15 @@ tablas:
       _modifiedonbehalfby_value: "modified_by_delegate"
       _createdonbehalfby_value: "created_by_delegate"
     
-    mc2plus_ofertas: # pendiente de revision por conflicto
+    mc2plus_ofertas:
       tablename: "mc2plus_oferta"
       importsequencenumber: "import_sequence_number"
       mc2plus_cargada: "cargada"
       mc2plus_fecha_creacion: "fecha_creacion"
-      #exchangerate: *****
       mc2plus_importe_total: "importe_total"
       utcconversiontimezonecode: "utc_conversion_time_zone_code"
       mc2plus_url_sharepoint: "url_sharepoint"
-      mc2plus_importe_pedidos_recibido: "importe_pedidos_recibo"
+      mc2plus_importe_pedidos_recibido: "importe_pedidos_recibido"
       statecode: "status_reason"
       mc2plus_fecha_finalizacion: "fecha_finalizacion" 
       statuscode: "status"
@@ -354,7 +354,6 @@ tablas:
       _createdonbehalfby_value: "created_by_delegate"
       timezoneruleversionnumber: "time_zone_rule_version_number"
       _owninguser_value: "owning_user"
-      #_transactioncurrencyid_value: *****
       versionnumber: "version_number"
       createdon: "created_on"
       _mc2plus_tramitador_value: "tramitador"
@@ -381,7 +380,7 @@ tablas:
       mc2plus_elementopep: "elemento_pep"
       _modifiedonbehalfby_value: "modified_by_delegate"
       _createdonbehalfby_value: "created_by_delegate"
-      mc2plus_nivel: nivel"
+      mc2plus_nivel: "nivel"
       timezoneruleversionnumber: "time_zone_rule_version_number"
       mc2plus_recurso: "recurso"
       _owninguser_value: "owning_user"
@@ -531,16 +530,16 @@ tablas:
       _ownerid_value: "owner"
       mc2plus_coste_unitario: "coste_unitario"
     
-    mc2plus_traducciones_sherpas: # pendiente de revision por conflicto
+    mc2plus_traducciones_sherpas:
       tablename: "mc2plus_traducciones_sherpa"
       importsequencenumber: "import_sequence_number"
       mc2plus_unidades: "unidades"
       mc2plus_implantacion: "implantacion"
       utcconversiontimezonecode: "utc_conversion_time_zone_code"
       mc2plus_meses: "meses"
-      #mc2plus_periodicidad: *****
+      mc2plus_periodicidad: "periodicidad"
       _mc2plus_idproducto_value: "id_producto"
-      #mc2plus_ratio: *****
+      mc2plus_ratio: "ratio"
       statecode: "status_reason"
       statuscode: "status"
       mc2plus_traducciones_sherpaid: "traducciones_sherpa"
@@ -560,7 +559,7 @@ tablas:
       timezoneruleversionnumber: "time_zone_rule_version_number"
       mc2plus_servicio_id: "servicio_id"
       _owninguser_value: "owning_user"
-      mc2plus_subactividad: subactividad"
+      mc2plus_subactividad: "subactividad"
       mc2plus_producto: "producto"
       versionnumber: "version_number"
       createdon: "created_on"
@@ -572,7 +571,7 @@ tablas:
       mc2plus_pedido: "pedido"
     
     # Maestros ------------------------------------------------------------------------------------------------------------------------------
-    mc2_maestro_perfils: # pendiente de revision por conflicto
+    mc2_maestro_perfils:
       tablename: "mc2plus_maestro_perfil"
       _createdby_value: "created_by"
       _createdonbehalfby_value: "created_by_delegate"
@@ -596,7 +595,7 @@ tablas:
       utcconversiontimezonecode: "utc_conversion_time_zone_code"
       versionnumber: "version_number"
       
-    mc2plus_maestro_plus_ambitos: # pendiente de revision por conflicto
+    mc2plus_maestro_plus_ambitos:
       tablename: "mc2plus_maestro_plus_ambito"
       importsequencenumber: "import_sequence_number"
       timezoneruleversionnumber: "time_zone_rule_version_number"
@@ -1088,7 +1087,7 @@ tablas:
     #Tablas Operativas Dataverse ------------------------------------------------------------------------------------------------------------------------------
 
     mc2plus_catalogos:
-      tablename: mc2plus_catalogo
+      tablename: "mc2plus_catalogo"
       importsequencenumber: import_sequence_number
       _mc2plus_moneda_precio_value: moneda_precio
       mycat_juridica: juridica

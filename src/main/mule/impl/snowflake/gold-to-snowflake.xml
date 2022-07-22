@@ -19,10 +19,7 @@ import fromBase64 from dw::core::Binaries
 ---
 fromBase64(payload.file.bytes) as Binary]" doc:name="bytes from base64" doc:id="28b6ee41-b39a-4029-a4d9-aceaa7ba6592" />
 		<flow-ref doc:name="parquet-payload-to-json" doc:id="ae0d52e1-2219-4a94-8d54-e1dd0bcb098a" name="parquet-payload-to-json"/>
-		<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="f3d9cfec-0242-4d72-a072-a9630e27d5b9" name="dataverse-to-snowflake-payload-transform"/>
-		<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout="50000">
-			<reconnect frequency="5000" count="3" />
-		</http:request>
+		<flow-ref doc:name="post-to-snowflake-paginated" doc:id="71402d54-a242-4003-a4f3-a4f430234375" name="post-to-snowflake-paginated" />
 		<json-logger:logger doc:name="END: Gold to snowflake" doc:id="01b023f4-662e-4af9-a0db-8d9e2992ef23" config-ref="JSON_Logger_Config" message="END: Gold to snowflake" tracePoint="END"/>
 	</sub-flow>
 </mule>
