@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<sub-flow name="post-to-snowflake-paginated" doc:id="f1ad8570-0fb9-4f53-9f3a-c8ddfa23844a" >
 		<set-variable value="#[payload]" doc:name="items" doc:id="4182b4d6-204f-49a2-ba1e-5245a9cc25a9" variableName="items"/>
 		<set-payload value='#[""]' doc:name="empty payload" doc:id="f258e920-453b-42b7-aca8-24941a10cf09" />
-		<logger level="INFO" doc:name="total item count" doc:id="8224c882-c66a-4b58-86d5-e03f675ccf40" message='#["Uploading to Snowflake " ++ sizeOf(vars.items) default "0" ++ " items"]'/>
+		<logger level="INFO" doc:name="total item count" doc:id="8224c882-c66a-4b58-86d5-e03f675ccf40" message='#["Uploading to Snowflake " ++ sizeOf(vars.items) as String default "0" ++ " items"]'/>
 		<set-variable value="#[%dw 2.0
 output application/java
 ---
@@ -22,7 +22,6 @@ p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) 
 			<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout="50000">
 			<reconnect frequency="5000" count="3" />
 		</http:request>
-			<logger level="INFO" doc:name="uploaded item count" doc:id="49d12505-ffb8-4b3d-b18c-106ef65a8d1a" message='#[vars.counter * sizeOf(payload) default "0" ++ " items succesfully updated to Snowflake"]'/>
 		</foreach>
 		<remove-variable doc:name="items" doc:id="811ea174-1b3b-4927-8465-65fe50010ff2" variableName="items"/>
 	</sub-flow>

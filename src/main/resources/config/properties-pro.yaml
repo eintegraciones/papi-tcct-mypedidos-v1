@@ -1,5 +1,5 @@
 dataverse:
-  host: "sapi-tcct-dataverse-v1-pro.ir-e1.cloudhub.io"
+  host: "sapi-tcct-dataverse-v1.ir-e1.cloudhub.io"
   port: 
     insecure: "80"
     secure: "443"
@@ -7,7 +7,7 @@ dataverse:
   client_secret: ""
 
 datalake:
-  host: "sapi-tcct-datalake-v1-pro.ir-e1.cloudhub.io"
+  host: "sapi-tcct-datalake-v1.ir-e1.cloudhub.io"
   port: 
     insecure: "80"
     secure: "443"
@@ -15,7 +15,7 @@ datalake:
   client_secret: ""
   
 snowflake:
-  host: "sapi-tcct-snowflake-v1-pro.ir-e1.cloudhub.io"
+  host: "sapi-tcct-snowflake-v1.ir-e1.cloudhub.io"
   port: 
     insecure: "80"
     secure: "443"
@@ -23,7 +23,7 @@ snowflake:
   client_secret: ""
   
 sqlserver:
-  host: "sapi-tcct-sql-server-v1-pro.ir-e1.cloudhub.io"
+  host: "sapi-tcct-sql-server-v1.ir-e1.cloudhub.io"
   port: 
     insecure: "80"
     secure: "443"
