@@ -6,15 +6,18 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<sub-flow name="post-to-snowflake-paginated" doc:id="f1ad8570-0fb9-4f53-9f3a-c8ddfa23844a" >
 		<set-variable value="#[payload]" doc:name="items" doc:id="4182b4d6-204f-49a2-ba1e-5245a9cc25a9" variableName="items"/>
+		<set-payload value='#[""]' doc:name="empty payload" doc:id="f258e920-453b-42b7-aca8-24941a10cf09" />
 		<logger level="INFO" doc:name="total item count" doc:id="8224c882-c66a-4b58-86d5-e03f675ccf40" message='#["Uploading to Snowflake " ++ sizeOf(vars.items) default "0" ++ " items"]'/>
 		<set-variable value="#[%dw 2.0
 output application/java
 ---
 p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) ++ '.tablename')]" doc:name="snowflake-tablename" doc:id="a43e49e8-3e46-4bba-8520-1b9abc6b8416" variableName="snowflake-tablename" />
-		<http:request method="DELETE" doc:name="DELETE/api/v1/snowflake/{tabla}" doc:id="5e22a732-cd23-4bf0-8f54-b9c69c16ceed" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout="50000">
+		<http:request method="DELETE" doc:name="DELETE /api/v1/snowflake/{tabla}" doc:id="5e22a732-cd23-4bf0-8f54-b9c69c16ceed" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="AUTO" requestStreamingMode="AUTO" responseTimeout="50000">
 			<reconnect frequency="5000" count="3" />
+			<http:body ><![CDATA[#[""]]]></http:body>
 		</http:request>
-		<foreach doc:name="For Each" doc:id="82b8dc8d-6268-463c-982e-85196c388b56" collection="#[vars.items]" batchSize="5000">
+		<logger level="INFO" doc:name="Deleted items" doc:id="6db6f80d-652b-4351-b1d1-3e41f707bd1e" message='#["Deleted items from " ++ vars."snowflake-tablename"]'/>
+		<foreach doc:name="For Each" doc:id="82b8dc8d-6268-463c-982e-85196c388b56" collection="#[vars.items]" batchSize="2000">
 			<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="e98d9d97-8fa7-4590-8173-a43cdd87251e" name="dataverse-to-snowflake-payload-transform" />
 			<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout="50000">
 			<reconnect frequency="5000" count="3" />
