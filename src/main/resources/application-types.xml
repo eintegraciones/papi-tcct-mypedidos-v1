@@ -1494,4 +1494,5 @@ type auto_79894b28_462a_4ec5_82b7_df9c2fb626ed_Output_Variables_content_length =
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#e84f5ddb-cd22-4279-9f90-ce0f83361869"/>
 </types:mule>

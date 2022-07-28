@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd
 http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
@@ -10,7 +10,8 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd">
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
 	<flow name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
 		<set-variable value="556" doc:name="integration_id: 556" doc:id="3db3d4ce-086c-4206-ab98-81a87df5ead2" variableName="integration_id"/>
@@ -25,28 +26,26 @@ http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mu
 					<set-variable value='#[p("tablas." ++ (vars.integration_id as String) ++ "." ++ (vars.tabla as String) ++ ".origin") default ""]' doc:name="origin" doc:id="cbcb7162-37e6-41e1-9ad5-b9047436d684" variableName="origin"/>
 					<choice doc:name="Choice" doc:id="a981da66-e260-44ef-9d0b-21acf4f01063" >
 						<when expression='#["sqlserver" == vars.origin]'>
-							<ee:transform doc:name="Transform Message SQLServer" doc:id="98acdf48-7d52-4309-b9bd-570a5308ca44">
+							<logger level="INFO" doc:name="Logger" doc:id="008c2077-2222-4e73-81b6-e7fd831156cc" />
+<!-- [STUDIO:"Transform Message SQLServer"]							<ee:transform doc:name="Transform Message SQLServer" doc:id="98acdf48-7d52-4309-b9bd-570a5308ca44">
 								<ee:message>
 									<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 import java!com::ntt::transformer::AvroSchemaSQLServer
----
+&#45;&#45;-
 AvroSchemaSQLServer::fileSchema(vars.data_sql, vars.tabla)]]></ee:set-payload>
 								</ee:message>
-							</ee:transform>
+							</ee:transform> [STUDIO] -->
 							
 						</when>
 						<otherwise >
-							<ee:transform doc:name="Transform Message Dataverse" doc:id="79328214-33a0-4f71-8e94-00f8cedbd2dc">
-								<ee:message>
-									<ee:set-payload><![CDATA[%dw 2.0
-output application/json
-import java!com::ntt::transformer::AvroSchemaDataverse
----
-AvroSchemaDataverse::fileSchema(vars.xml_dataverse, vars.tabla)]]></ee:set-payload>
-								</ee:message>
-							</ee:transform>
-							
+							<java:new doc:name="New" doc:id="7ca45d0c-6c7d-4521-8969-ebd2d1f77b04" class="com.ntt.transformer.AvroSchemaDataverse" constructor="AvroSchemaDataverse()" target="instanceDataverse"/>
+							<java:invoke doc:name="Invoke" doc:id="f9365fbe-f061-4f62-8afb-6c586c22d6a6" instance="#[vars.instanceDataverse]" class="com.ntt.transformer.AvroSchemaDataverse" method="fileSchema(java.lang.String,java.lang.String)">
+								<java:args ><![CDATA[#[{
+	"data": vars.xml_dataverse, 
+	"tableName": vars.tabla
+}]]]></java:args>
+							</java:invoke>
 						</otherwise>
 					</choice>
 				</batch:step>
