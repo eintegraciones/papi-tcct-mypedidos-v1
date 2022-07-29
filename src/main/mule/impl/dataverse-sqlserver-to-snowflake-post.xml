@@ -16,41 +16,53 @@ http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/jav
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
 		<set-variable value="556" doc:name="integration_id: 556" doc:id="3db3d4ce-086c-4206-ab98-81a87df5ead2" variableName="integration_id"/>
 		<flow-ref doc:name="get-array-of-tables-by-integration_id" doc:id="a7765056-b940-4469-8826-046e9a630789" name="get-array-of-tables-by-integration_id"/>
-		<http:request method="GET" doc:name="GET SCHEMA DATAVERSE" doc:id="9681badb-7e11-41cd-a098-3d599865e540" config-ref="Dataverse_HTTP_Request_configuration" path='/dataverse/$metadata#pyp_mantenimiento_pps' responseTimeout="120000" target="xml_dataverse">
+		<http:request method="GET" doc:name="GET SCHEMA DATAVERSE" doc:id="9681badb-7e11-41cd-a098-3d599865e540" config-ref="Dataverse_HTTP_Request_configuration" path='/dataverse/$metadata' responseTimeout="120000" target="xml_dataverse">
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<batch:job jobName="dataverse-sqlserver-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
 			<batch:process-records >
-				<batch:step name="Batch_Step" doc:id="178a3f54-6781-49b5-bd23-b97ef0396e2e" >
-					<flow-ref doc:name="set-tabla-and-origin" doc:id="63ff1ea0-b834-4418-8e5c-9e604857d5f0" name="set-tabla-and-origin" />
+				<batch:step name="Generate_Avro_Schemas" doc:id="178a3f54-6781-49b5-bd23-b97ef0396e2e" >
+					<flow-ref doc:name="set-tabla-tablename-schema-and-origin" doc:id="63ff1ea0-b834-4418-8e5c-9e604857d5f0" name="set-tabla-tablename-schema-and-origin" />
 					<choice doc:name="Choice" doc:id="a981da66-e260-44ef-9d0b-21acf4f01063" >
 						<when expression='#["sqlserver" == vars.origin]'>
-							<logger level="INFO" doc:name="Logger" doc:id="008c2077-2222-4e73-81b6-e7fd831156cc" />
-<!-- [STUDIO:"Transform Message SQLServer"]							<ee:transform doc:name="Transform Message SQLServer" doc:id="98acdf48-7d52-4309-b9bd-570a5308ca44">
-								<ee:message>
-									<ee:set-payload><![CDATA[%dw 2.0
-output application/json
+							<http:request method="GET" doc:name="GET columns SQLServer" doc:id="8c292354-c2ab-4aac-b9aa-f168404ae559" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String ++ "/columns"]' responseTimeout="120000" target="json_sqlserver">
+								<reconnect frequency="5000" count="3" />
+								<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"schema" : vars.schema
+}]]]></http:query-params>
+							</http:request>
+							<ee:transform doc:name="Write SQL Server to schema" doc:id="1108e0f8-949d-4b2b-bb0e-088f7f09b658" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
 import java!com::ntt::transformer::AvroSchemaSQLServer
-&#45;&#45;-
-AvroSchemaSQLServer::fileSchema(vars.data_sql, vars.tabla)]]></ee:set-payload>
+---
+AvroSchemaSQLServer::fileSchema(vars.json_sqlserver, vars.tablename)]]></ee:set-payload>
 								</ee:message>
-							</ee:transform> [STUDIO] -->
+							</ee:transform>
 							
 						</when>
 						<otherwise >
-							<java:new doc:name="New" doc:id="7ca45d0c-6c7d-4521-8969-ebd2d1f77b04" class="com.ntt.transformer.AvroSchemaDataverse" constructor="AvroSchemaDataverse()" target="instanceDataverse"/>
-							<java:invoke doc:name="Invoke" doc:id="f9365fbe-f061-4f62-8afb-6c586c22d6a6" instance="#[vars.instanceDataverse]" class="com.ntt.transformer.AvroSchemaDataverse" method="fileSchema(java.lang.String,java.lang.String)">
-								<java:args ><![CDATA[#[{
-	"data": vars.xml_dataverse, 
-	"tableName": vars.tabla
-}]]]></java:args>
-							</java:invoke>
+							<ee:transform doc:name="Write dataverse to schema" doc:id="1f206339-ffd4-449f-81cb-b4b76bb87294" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import java!com::ntt::transformer::AvroSchemaDataverse
+---
+AvroSchemaDataverse::fileSchema(write(vars.xml_dataverse, "application/xml") as String, vars.tablename)]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
 						</otherwise>
 					</choice>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="06f2bf78-c750-4ad2-a289-1cd109b7e447" streaming="true">
+						<remove-variable doc:name="xml_dataverse" doc:id="937f507c-8783-4013-9920-dfe027622e22" variableName="xml_dataverse"/>
+						<remove-variable doc:name="json_sqlserver" doc:id="3e04dfea-14c7-4c7c-a0ff-0ac098adf415" variableName="json_sqlserver" />
+					</batch:aggregator>
 				</batch:step>
 				<batch:step name="Dataverse-sqlserver-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
 					<logger level="INFO" doc:name="tabla being processed" doc:id="5cb1518b-d233-42bc-8329-334c006aba36" message='#["Processing " ++ vars.tabla as String ++ " ============================================================================================================="]'/>
-					<flow-ref doc:name="set-tabla-and-origin" doc:id="128a84b2-16c0-4131-918e-19fc3cbb9d92" name="set-tabla-and-origin"/>
 					<flow-ref doc:name="dataverse-sqlserver-to-bronze-Flow" doc:id="c350fb0b-c133-4e94-80d2-7500d0e8bbdb" name="dataverse-sqlserver-to-bronze-Flow"/>
 					<flow-ref doc:name="bronze-to-silver-Flow" doc:id="b16ec39f-969d-42cd-8f46-b18aab23f7ce" name="bronze-to-silver-Flow" />
 					<flow-ref doc:name="silver-to-gold-Flow" doc:id="c0ccf0c3-663d-4844-8545-8b5c9a30eb78" name="silver-to-gold-Flow" />

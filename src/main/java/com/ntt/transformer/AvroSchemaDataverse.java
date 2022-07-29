@@ -7,14 +7,8 @@ import org.w3c.dom.NodeList;
 
 public class AvroSchemaDataverse extends AvroSchema {
 
-	
-	public AvroSchemaDataverse() {
-		//System.out.println("Creo instancia");
-	}
-
-	public void fileSchema(String data, String tableName) {
+	public static void fileSchema(String data, String tableName) {
 		StringBuilder schema = new StringBuilder();
-		
 		Document docXML = convertStringToXMLDocument(data);
 		docXML.getDocumentElement().normalize();
 		Element eElement = getNodeTable(docXML, tableName);
@@ -66,11 +60,7 @@ public class AvroSchemaDataverse extends AvroSchema {
 
 		System.out.println(schema.toString());
 		
-		writeSchema(schema.toString(), tableName + ".schame");
+		writeSchema(schema.toString(), tableName + ".schema");
 	}
-
-	
-
-
 
 }

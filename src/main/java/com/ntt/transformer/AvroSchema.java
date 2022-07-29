@@ -2,6 +2,7 @@ package com.ntt.transformer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.apache.avro.generic.GenericData;
 import org.apache.commons.io.FileUtils;
@@ -14,12 +15,11 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
 import org.xml.sax.InputSource;
 
 public class AvroSchema {
 
-	protected void writeSchema(String dataSchema, String nameSchema) {
+	protected static void writeSchema(String dataSchema, String nameSchema) {
 		
 		String pathNameSchema = "tmp/" + nameSchema;
 		ParquetReader<GenericData.Record> reader = null;
@@ -53,7 +53,7 @@ public class AvroSchema {
 	    return doc;
 	}
 	
-	protected Element getNodeTable(Document docXML, String tableName) {
+	protected static Element getNodeTable(Document docXML, String tableName) {
 		Element eElementTable = null;
 		Element eElementRoot = docXML.getDocumentElement();
 		NodeList nList = eElementRoot.getElementsByTagName("EntityType");

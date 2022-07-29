@@ -3,8 +3,16 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-	<sub-flow name="set-tabla-and-origin" doc:id="ce3d673d-5b91-4018-95eb-e499eb718f66" >
+	<sub-flow name="set-tabla-tablename-schema-and-origin" doc:id="ce3d673d-5b91-4018-95eb-e499eb718f66" >
 		<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
+		<set-variable value="#[%dw 2.0
+output application/java
+---
+p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) ++ '.tablename')]" doc:name="tablename" doc:id="a49bb97e-a986-4bb8-b008-553fa8b62afb" variableName="tablename" />
+		<set-variable value="#[%dw 2.0
+output application/java
+---
+p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) ++ '.schema') default &quot;dbo&quot;]" doc:name="schema" doc:id="d879423f-e02a-4978-9408-ec5ed35a6a32" variableName="schema" />
 		<set-variable value='#[p("tablas." ++ (vars.integration_id as String) ++ "." ++ (vars.tabla as String) ++ ".origin") default ""]' doc:name="origin" doc:id="cbcb7162-37e6-41e1-9ad5-b9047436d684" variableName="origin" />
 	</sub-flow>
 	<sub-flow name="get-array-of-tables-by-integration_id" doc:id="3f227537-9d21-412d-9115-eb5a53adccc3" >

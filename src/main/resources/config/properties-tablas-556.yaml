@@ -37,7 +37,7 @@ tablas:
       "mc2plus_maestro_plus_servicio_comercials",
       "mc2plus_maestro_plus_sociedads",
       "mc2plus_maestro_plus_tramitadors",
-      "mc2plus_cargamasiva",
+      #"mc2plus_cargamasiva",
       "mc2plus_cargamasivaErrores",
       "mc2plus_datosCarga",
       "mc2plus_catalogos",
