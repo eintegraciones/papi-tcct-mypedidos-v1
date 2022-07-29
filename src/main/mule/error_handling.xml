@@ -218,7 +218,7 @@ vars.response_error default { error: vars.httpStatus}]]></ee:set-payload>
 					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
-			<flow-ref doc:name="Flow Reference" doc:id="1fd7aeaa-f144-4494-8440-e24e1ddd7058" name="subflow_error_send_notifications" />
+			<flow-ref doc:name="subflow_error_send_notifications" doc:id="1fd7aeaa-f144-4494-8440-e24e1ddd7058" name="subflow_error_send_notifications" />
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On INTERNAL_SERVER_ERROR Error Propagate" doc:id="19d30614-3770-4c03-841c-90d30894ad0c" type="HTTP:INTERNAL_SERVER_ERROR">
 			<ee:transform doc:name="Output 500 Error" doc:id="ae6a6a1a-7cdb-4a10-893c-001f119dcafe">
@@ -229,7 +229,7 @@ vars.response_error default { error: vars.httpStatus}]]></ee:set-payload>
 					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
-			<flow-ref doc:name="Flow Reference" doc:id="e1d75478-f61a-496e-a424-8add06648b3d" name="subflow_error_send_notifications" />
+			<flow-ref doc:name="subflow_error_send_notifications" doc:id="e1d75478-f61a-496e-a424-8add06648b3d" name="subflow_error_send_notifications" />
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On ANY Error Propagate" doc:id="a90fd8f6-b066-4de2-a52f-0806094e8269">
 			<ee:transform doc:name="Output 500 Error" doc:id="884ee4bd-baf2-4a56-94f9-19ec34dcf0ec">
@@ -240,7 +240,7 @@ vars.response_error default { error: vars.httpStatus}]]></ee:set-payload>
 					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
-			<flow-ref doc:name="Flow Reference" doc:id="9b7e7e20-b8de-41ac-8b52-5a82a3a51250" name="subflow_error_send_notifications" />
+			<flow-ref doc:name="subflow_error_send_notifications" doc:id="9b7e7e20-b8de-41ac-8b52-5a82a3a51250" name="subflow_error_send_notifications" />
 		</on-error-propagate>
 	</error-handler>
 </mule>

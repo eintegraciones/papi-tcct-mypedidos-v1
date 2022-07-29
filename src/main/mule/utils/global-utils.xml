@@ -3,11 +3,14 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="set-tabla-and-origin" doc:id="ce3d673d-5b91-4018-95eb-e499eb718f66" >
+		<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
+		<set-variable value='#[p("tablas." ++ (vars.integration_id as String) ++ "." ++ (vars.tabla as String) ++ ".origin") default ""]' doc:name="origin" doc:id="cbcb7162-37e6-41e1-9ad5-b9047436d684" variableName="origin" />
+	</sub-flow>
 	<sub-flow name="get-array-of-tables-by-integration_id" doc:id="3f227537-9d21-412d-9115-eb5a53adccc3" >
 		<set-payload value='#[splitBy(p("tablas." ++ (vars.integration_id as String) ++ ".listado"), ",") default []]' doc:name="Array of tables" doc:id="d847b2ab-6e2b-4795-b761-0995e3eef276" />
 	</sub-flow>
 	<sub-flow name="dataverse-to-snowflake-payload-transform" doc:id="79894b28-462a-4ec5-82b7-df9c2fb626ed" >
-		<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) ++ '.tablename')]" doc:name="snowflake-tablename" doc:id="7698eac2-fa02-43b2-a298-9404539127c2" variableName="snowflake-tablename" />
 		<set-payload value='#[%dw 2.0
 output application/json
 ---
