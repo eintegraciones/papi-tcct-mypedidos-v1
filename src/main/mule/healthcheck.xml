@@ -3,7 +3,7 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 	<flow name="healthcheck-main">
-        <http:listener path="/api/*" config-ref="HTTPS_Listener_config_standard">
+        <http:listener path="/mainHealth/*" config-ref="HTTPS_Listener_config_standard">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>

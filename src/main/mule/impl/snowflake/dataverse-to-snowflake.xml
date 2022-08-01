@@ -14,9 +14,17 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
     payload: JSONLoggerModule::stringifyNonJSON(payload) 
 }]]></json-logger:content>
 		</json-logger:logger>
-		<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="61667e64-6978-40b7-ae62-b7816a25c7dd" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]'>
-			<reconnect frequency="5000" count="3" />
-		</http:request>
+		<set-variable value='#[p("tablas." ++ (vars.integration_id as String) ++ "." ++ (vars.tabla as String) ++ ".origin") default ""]' doc:name="origin" doc:id="6177cb89-9ca4-456c-8cf0-3c7375ec343b" variableName="origin" />
+		<choice doc:name="Choice" doc:id="98a3c0f4-c6d1-4b82-af6f-a5c73b79cf5e">
+			<when expression='#["sqlserver" == vars.origin]'>
+				<flow-ref doc:name="sqlserver-paginated-call" doc:id="a54c5379-f89d-4e89-bd03-9ed6afba5e67" name="sqlserver-paginated-call" />
+			</when>
+			<otherwise>
+				<http:request method="GET" doc:name="GET /api/v1/dataverse/{tabla}" doc:id="6e8df278-8adf-4a85-a32f-5a9b6cb4ce2c" config-ref="Dataverse_HTTP_Request_configuration" path='#["/dataverse/" ++ vars.tabla as String]' responseTimeout="120000">
+					<reconnect frequency="5000" count="3" />
+				</http:request>
+			</otherwise>
+		</choice>
 		<validation:is-not-empty-collection doc:name="payload.response" doc:id="1de5c84c-3449-4ee0-8db7-df28989c0f66" values="#[payload.response]" message='#["No se han encontrado datos en la tabla " ++ vars.tabla as String]' />
 		<set-payload value='#[%dw 2.0
 output application/json
@@ -26,9 +34,7 @@ filterObject ((value, key, index) -&gt;
     !(key contains("@"))
 ))]' doc:name="To Json with etags filtered" doc:id="2f3113b4-a88c-477b-b7df-941934a65ed1" />
 		<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="92be9470-cea6-4f12-8efa-b9c641c4c48b" name="dataverse-to-snowflake-payload-transform" />
-		<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="ad23f1e2-dda9-427f-a10a-1887492c663e" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' >
-			<reconnect frequency="5000" count="3" />
-		</http:request>
+		<flow-ref doc:name="post-to-snowflake-paginated" doc:id="0ae9719c-680b-4687-b67f-d7846256862c" name="post-to-snowflake-paginated" />
 		<json-logger:logger doc:name="END: Dataverse to Snowflake" doc:id="23996203-ae60-4159-ac71-97314fde795e" config-ref="JSON_Logger_Config" message="END: Gold to snowflake" tracePoint="END"/>
 	
 </sub-flow>

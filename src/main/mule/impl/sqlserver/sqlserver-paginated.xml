@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 		<foreach doc:name="For Each" doc:id="f61fac85-bc23-407c-b773-066a9748984d" collection="#[%dw 2.0 &#10;output application/json&#10;fun prepareList(list: Array, maxSize: Number) = &#10;    if(sizeOf(list) &gt;= maxSize )&#10;        list&#10;    else&#10;        prepareList(list ++ [(sizeOf(list) + 1) as Number], maxSize)&#10;---&#10;prepareList([], vars.pagination.totalPages as Number)]">
 			<set-variable value="#[payload]" doc:name="page" doc:id="97ccba2d-14dc-4f4a-8276-8cfd5956ccae" variableName="page"/>
 			<set-variable value="#[output text/plain&#10;---&#10;(vars.page as Number - 1) * vars.pagination.itemsPerPage as Number]" doc:name="offset" doc:id="eb699c3f-dbfe-4900-b2d0-9fdfc48a1cd5" variableName="offset"/>
-			<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]'>
+			<http:request method="GET" doc:name="GET /api/v1/sqlserver/{tabla}" doc:id="1a675a14-13c2-4e43-9931-638ccf05f239" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String]' responseTimeout="120000">
 					<reconnect frequency="5000" count="3" />
 				<http:query-params ><![CDATA[#[output application/java
 ---
