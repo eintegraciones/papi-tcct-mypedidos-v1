@@ -39,7 +39,7 @@ public class JsonToAvroSchemaConvertor {
 		return resp;
 	}
 	
-	public static Schema toAvroSchema(String tableName, List<Map<String, Object>> json) {
+	private static Schema toAvroSchema(String tableName, List<Map<String, Object>> json) {
 		Map<String, Object> map = extractFieldMapFromJson(json);
 		
 		String schema = "{\"type\" : \"record\", \"namespace\" : \"com.nttdata.bean\", \"name\" : \"" + tableName + "\", \"fields\" : [";
@@ -112,5 +112,28 @@ public class JsonToAvroSchemaConvertor {
 		}
 		return resp;
 	}
+	
+	public static byte[] getBytesOfJsonAsParquet(String tableName, List<Map<String, Object>> data, String schema) {
+		String tmpPath = "tmp/" + tableName + System.currentTimeMillis() + ".parquet";
+		System.out.println("JSON INPUT: " + data.toString().substring(0,500));
+		System.out.println("RECEIVED AVRO SCHEMA: " + schema);
+		Schema avroSchema = new Schema.Parser().parse(schema);
+		toParquet(tmpPath, data, avroSchema);
+		byte[] resp = null;
+		File file = new File(tmpPath);
+		try {
+			FileInputStream in = new FileInputStream(file);
+			resp = new byte[(int)file.length()];
+			in.read(resp);
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// Eliminar el fichero temporal tras leer los bytes
+			file.delete();
+		}
+		return resp;
+	}
+
 
 }

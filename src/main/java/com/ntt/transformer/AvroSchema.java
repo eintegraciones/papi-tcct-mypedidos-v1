@@ -21,7 +21,7 @@ public class AvroSchema {
 
 	protected static void writeSchema(String dataSchema, String nameSchema) {
 		
-		String pathNameSchema = "tmp/" + nameSchema;
+		String pathNameSchema = "tmp/schemas/" + nameSchema;
 		ParquetReader<GenericData.Record> reader = null;
         try {
         	// Guardamos los bytes en un fichero temporal
@@ -33,7 +33,7 @@ public class AvroSchema {
 	}
 	
 	
-	protected Document convertStringToXMLDocument(String xmlString) {
+	protected static Document convertStringToXMLDocument(String xmlString) {
 		Document doc = null;
 		
 		//Parser that produces DOM object trees from XML content

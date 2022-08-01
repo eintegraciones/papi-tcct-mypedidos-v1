@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:azure-data-lake-storage="http://www.mulesoft.org/schema/mule/azure-data-lake-storage" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/azure-data-lake-storage http://www.mulesoft.org/schema/mule/azure-data-lake-storage/current/mule-azure-data-lake-storage.xsd
 http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
@@ -11,7 +11,9 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd
-http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 	<flow name="dataverse-sqlserver-to-snowflake-postFlow" doc:id="b1c524a9-005c-48c0-a873-d93ccfdbf8c5" >
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
 		<set-variable value="556" doc:name="integration_id: 556" doc:id="3db3d4ce-086c-4206-ab98-81a87df5ead2" variableName="integration_id"/>
@@ -23,26 +25,40 @@ http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/jav
 			<batch:process-records >
 				<batch:step name="Generate_Avro_Schemas" doc:id="178a3f54-6781-49b5-bd23-b97ef0396e2e" >
 					<flow-ref doc:name="set-tabla-tablename-schema-and-origin" doc:id="63ff1ea0-b834-4418-8e5c-9e604857d5f0" name="set-tabla-tablename-schema-and-origin" />
+					<flow-ref doc:name="read-file-schema" doc:id="b185a0bc-7708-438d-bb63-6df5e309527f" name="read-file-schema" />
+					<try doc:name="Try" doc:id="e75bead1-3810-4a81-a51b-d4bde837b86d" >
+						<validation:is-not-empty-collection doc:name="Check file schema exists " doc:id="0516782d-923b-4665-88db-b648599c23ec" values="#[vars.schemafile]"/>
+						<set-variable value="true" doc:name="schema_exists" doc:id="7609b4cd-52f6-4bac-bf49-c8485ea6de1f" variableName="schema_exists"/>
+						<error-handler >
+							<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9030deba-ffbc-4751-9226-12a085ea3b30" >
+								<logger level="TRACE" doc:name="Schema doesn't exist" doc:id="5a3e70d9-f166-487f-ac6c-ce80aa4d04ca" message="#[&quot;Schema for table &quot; ++ vars.tablename as String ++ &quot; doesn\'t exist, generating one&quot;]"/>
+							</on-error-continue>
+						</error-handler>
+					</try>
 					<choice doc:name="Choice" doc:id="a981da66-e260-44ef-9d0b-21acf4f01063" >
+						<when expression="#[vars.schema_exists as Boolean default false]">
+							<logger level="TRACE" doc:name="Schema exists" doc:id="598231a7-97a3-4d36-bbac-6cd12f283177" message='#["Schema for table " ++ vars.tablename as String ++ " already exists"]'/>
+							
+						</when>
 						<when expression='#["sqlserver" == vars.origin]'>
 							<http:request method="GET" doc:name="GET columns SQLServer" doc:id="8c292354-c2ab-4aac-b9aa-f168404ae559" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String ++ "/columns"]' responseTimeout="120000" target="json_sqlserver">
 								<reconnect frequency="5000" count="3" />
-								<http:query-params ><![CDATA[#[output application/java
+								<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"schema" : vars.schema
 }]]]></http:query-params>
 							</http:request>
-							<ee:transform doc:name="Write SQL Server to schema" doc:id="1108e0f8-949d-4b2b-bb0e-088f7f09b658" >
-								<ee:message >
-									<ee:set-payload ><![CDATA[%dw 2.0
+							<ee:transform doc:name="Write SQL Server to schema" doc:id="1108e0f8-949d-4b2b-bb0e-088f7f09b658">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 import java!com::ntt::transformer::AvroSchemaSQLServer
 ---
 AvroSchemaSQLServer::fileSchema(vars.json_sqlserver, vars.tablename)]]></ee:set-payload>
 								</ee:message>
 							</ee:transform>
-							
+							<flow-ref doc:name="read-file-schema" doc:id="aa5da4a1-5352-4cdd-a0b4-4974024f5323" name="read-file-schema" />
 						</when>
 						<otherwise >
 							<ee:transform doc:name="Write dataverse to schema" doc:id="1f206339-ffd4-449f-81cb-b4b76bb87294" >
@@ -54,12 +70,9 @@ import java!com::ntt::transformer::AvroSchemaDataverse
 AvroSchemaDataverse::fileSchema(write(vars.xml_dataverse, "application/xml") as String, vars.tablename)]]></ee:set-payload>
 								</ee:message>
 							</ee:transform>
+							<flow-ref doc:name="read-file-schema" doc:id="f466fffb-18c0-4623-ab55-2f64414de660" name="read-file-schema" />
 						</otherwise>
 					</choice>
-					<batch:aggregator doc:name="Batch Aggregator" doc:id="06f2bf78-c750-4ad2-a289-1cd109b7e447" streaming="true">
-						<remove-variable doc:name="xml_dataverse" doc:id="937f507c-8783-4013-9920-dfe027622e22" variableName="xml_dataverse"/>
-						<remove-variable doc:name="json_sqlserver" doc:id="3e04dfea-14c7-4c7c-a0ff-0ac098adf415" variableName="json_sqlserver" />
-					</batch:aggregator>
 				</batch:step>
 				<batch:step name="Dataverse-sqlserver-to-snowflake" doc:id="7c418dfa-53dd-4674-a2af-e7cf8db266a3" >
 					<logger level="INFO" doc:name="tabla being processed" doc:id="5cb1518b-d233-42bc-8329-334c006aba36" message='#["Processing " ++ vars.tabla as String ++ " ============================================================================================================="]'/>

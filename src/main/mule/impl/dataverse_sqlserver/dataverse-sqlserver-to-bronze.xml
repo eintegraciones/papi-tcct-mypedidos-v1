@@ -29,7 +29,7 @@ payload.response map(payload.response[$$]
 filterObject ((value, key, index) -&gt; 
     !(key contains("@"))
 ))]' doc:name="To Json with etags filtered" doc:id="9594f3a0-8e4e-4d2e-b29a-2e094a2932ba" />
-		<flow-ref doc:name="json-payload-to-parquet" doc:id="7bf54b6d-a474-4a1c-8d6d-5126279bf2c5" name="json-payload-to-parquet"/>
+		<flow-ref doc:name="json-payload-to-parquet-with-schema" doc:id="7bf54b6d-a474-4a1c-8d6d-5126279bf2c5" name="json-payload-to-parquet-with-schema"/>
 		<flow-ref doc:name="parquet-bytes-to-multipart" doc:id="6d6a68ac-4c8d-4819-86c8-289b30b12eed" name="parquet-bytes-to-multipart"/>
 		<http:request method="POST" doc:name="POST /api/v1/datalake-bronze/{tabla}" doc:id="03065524-dd33-4486-ab9d-5e269ce82600" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.tabla as String]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS">
 			<reconnect frequency="5000" count="3" />

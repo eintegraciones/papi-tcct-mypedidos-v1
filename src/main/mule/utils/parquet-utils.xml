@@ -15,6 +15,17 @@ JsonToAvroSchemaConvertor::getBytesOfJsonAsParquet(vars.tabla, payload)]]></ee:s
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+	<sub-flow name="json-payload-to-parquet-with-schema" doc:id="7b8c8c74-2392-46fe-a5ff-7082bab1f61e">
+		<ee:transform doc:name="To Parquet byte Array with Avro schema" doc:id="3ffa3aae-4635-4c72-84be-c3a3d9959eca">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/octet-stream
+import java!com::ntt::parquet::JsonToAvroSchemaConvertor
+---
+JsonToAvroSchemaConvertor::getBytesOfJsonAsParquet(vars.tabla, payload, vars.schemafile[0].typedValue as String)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
 	<sub-flow name="parquet-payload-to-json" doc:id="8ddc0388-2f40-4f25-9213-8b13cb4052a0" >
 		<ee:transform doc:name="To Json" doc:id="a5cfcd4b-a6b0-40fb-b34a-8eb833ac1089" >
 			<ee:message >

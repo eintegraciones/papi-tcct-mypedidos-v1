@@ -31,26 +31,26 @@ public class AvroSchemaDataverse extends AvroSchema {
 				String type = eElementProperty.getAttribute("Type");
 				switch (type) {
 				case "Edm.String":
-					schema.append("\"type\":\"[\"null\",\"string\"]");
+					schema.append("\"type\":[\"null\",\"string\"]");
 					break;
 				case "Edm.Double":
-					schema.append("\"type\":\"[\"null\",\"double\"]");
+					schema.append("\"type\":[\"null\",\"double\"]");
 					break;
 				case "Edm.Boolean":
-					schema.append("\"type\":\"[\"null\",\"boolean\"]");
+					schema.append("\"type\":[\"null\",\"boolean\"]");
 					break;
 				case "Edm.Int32":
-					schema.append("\"type\":\"[\"null\",\"int\"]");
+					schema.append("\"type\":[\"null\",\"int\"]");
 					break;
 				case "Edm.Float":
 				case "Edm.Decimal":
-					schema.append("\"type\":\"[\"null\",\"float\"]");
+					schema.append("\"type\":[\"null\",\"float\"]");
 					break;
 				case "Edm.Int64":
-					schema.append("\"type\":\"[\"null\",\"long\"]");
+					schema.append("\"type\":[\"null\",\"long\"]");
 					break;
 				default:
-					schema.append("\"type\":\"[\"null\",\"string\"]");
+					schema.append("\"type\":[\"null\",\"string\"]");
 					break;
 				}
 				schema.append("}");
