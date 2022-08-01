@@ -525,7 +525,7 @@ tablas:
       ID: "ID"
       # Falta en SQLServer tabla IDACREDORDEUDOR (tabla Snowflake)
       IDCLiente: "IDCLIENTE"
-      IDProveedorAcreedor: #***
+      #IDProveedorAcreedor: ***
       IDRegistro: "IDREGISTRO"
       IDSociedad: "IDSOCIEDAD"
       ImporteMD: "IMPORTEMD"

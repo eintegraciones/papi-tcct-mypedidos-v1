@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
 	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
 	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
-	xmlns:amazon-lambda="http://www.mulesoft.org/schema/mule/amazon-lambda"
-	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:amazon-lambda="http://www.mulesoft.org/schema/mule/amazon-lambda" xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
@@ -13,7 +13,8 @@ http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule
 http://www.mulesoft.org/schema/mule/amazon-lambda http://www.mulesoft.org/schema/mule/amazon-lambda/current/mule-amazon-lambda.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
     <apikit:config name="papi-tcct-mypedidos-config" api="resource::663a0048-7c7b-47be-9b95-bde284c854c9:papi-tcct-mypedidos:1.0.1:raml:zip:papi-tcct-mypedidos.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <apikit:config name="healthcheck-config" api="api\healthcheck.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="635bf38b-3391-4e05-b1f6-8f8019dc7440" environment="${mule.env}" disabledFields="content"/>
@@ -64,8 +65,13 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 	<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="4acae453-7b65-4253-9c7b-4f711b8a2fd8" >
 		<cloudhub:connection clientId="${cloudhub.client_id}" clientSecret="${cloudhub.client_secret}" environment="${cloudhub.env_id}"/>
 	</cloudhub:config>
-	<file:config name="File_Config_tmp" doc:name="File Config" doc:id="1364c592-87cb-4a81-b8fe-cd474130a738" >
-		<file:connection workingDir="${mule.home}/bin/tmp" />
-	</file:config>
+	<os:config name="Schemas_ObjectStore_Config" doc:name="ObjectStore Config" doc:id="9eddc858-c71c-4ce9-a5f7-fe496c679a0b" >
+		<os:connection >
+			<reconnection >
+				<reconnect frequency="5000" count="3" />
+			</reconnection>
+		</os:connection>
+	</os:config>
+	<os:object-store name="SchemasObject_store" doc:name="Object store" doc:id="bce86bfc-f54d-4ac9-a9e5-a61731947c4c" expirationInterval="30" expirationIntervalUnit="DAYS" config-ref="Schemas_ObjectStore_Config" />
 	
 </mule>

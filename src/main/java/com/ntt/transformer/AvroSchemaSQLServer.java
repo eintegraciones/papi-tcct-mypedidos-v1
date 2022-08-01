@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class AvroSchemaSQLServer extends AvroSchema {
 
-	public static void fileSchema(Map<String, String> data, String tableName) {
+	public static String fileSchema(Map<String, String> data, String tableName) {
 		StringBuilder schema = new StringBuilder();
 		schema.append("{\"type\" : \"record\", \"namespace\" : \"com.nttdata.bean\", \"name\" : \"" + tableName + "\", \"fields\" : [");
 		int temp = 0;
@@ -47,7 +47,7 @@ public class AvroSchemaSQLServer extends AvroSchema {
 		}
 		schema.append("]}");
 		
-		writeSchema(schema.toString(), tableName + ".schema");
+		return schema.toString();
 	}
 
 }

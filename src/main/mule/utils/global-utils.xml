@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
 	<sub-flow name="set-tabla-tablename-schema-and-origin" doc:id="ce3d673d-5b91-4018-95eb-e499eb718f66" >
 		<set-variable value="#[payload]" doc:name="tabla" doc:id="bef07e58-f666-43f8-b66c-99dea6a38753" variableName="tabla" />
 		<set-variable value="#[%dw 2.0
@@ -18,21 +19,6 @@ p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) 
 	</sub-flow>
 	<sub-flow name="get-array-of-tables-by-integration_id" doc:id="3f227537-9d21-412d-9115-eb5a53adccc3" >
 		<set-payload value='#[splitBy(p("tablas." ++ (vars.integration_id as String) ++ ".listado"), ",") default []]' doc:name="Array of tables" doc:id="d847b2ab-6e2b-4795-b761-0995e3eef276" />
-	</sub-flow>
-	<sub-flow name="read-file-schema" doc:id="23721234-93dd-4870-93f5-9267ebb7eb17">
-		<try doc:name="Try" doc:id="73bba7c8-7f05-4191-ae3c-0123f308c2a9" >
-			<file:list doc:name="schemas" doc:id="2811d922-f5b3-49c9-a3d1-8ca9baf1a7cb" directoryPath="schemas" target="schemafile" config-ref="File_Config_tmp">
-						<file:matcher filenamePattern='#[vars.tablename as String ++ ".schema"]' directories="EXCLUDE" regularFiles="REQUIRE" />
-					</file:list>
-			<error-handler >
-				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c8fcb85b-f7e9-46e4-a64d-fd5c10bc25bc" type="FILE:ILLEGAL_PATH">
-					<file:create-directory doc:name="Create directory" doc:id="d7586aca-bea4-4370-8958-b097472e2ddc" directoryPath="schemas" config-ref="File_Config_tmp" />
-					<file:list doc:name="schemas" doc:id="1f177f4e-cc8e-4f50-816a-abe484cdac05" config-ref="File_Config_tmp" directoryPath="schemas" target="schemafile" >
-						<file:matcher filenamePattern='#[vars.tablename as String ++ ".schema"]' directories="EXCLUDE" regularFiles="REQUIRE" />
-					</file:list>
-				</on-error-continue>
-			</error-handler>
-		</try>
 	</sub-flow>
 	<sub-flow name="dataverse-to-snowflake-payload-transform" doc:id="79894b28-462a-4ec5-82b7-df9c2fb626ed" >
 		<set-payload value='#[%dw 2.0

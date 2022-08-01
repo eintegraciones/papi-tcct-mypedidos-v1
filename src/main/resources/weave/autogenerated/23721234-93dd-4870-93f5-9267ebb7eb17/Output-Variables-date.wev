@@ -1,9 +1,0 @@
-%dw 2.0
-
-type auto_23721234_93dd_4870_93f5_9267ebb7eb17_Output_Variables_date = {|
-  concatenated*: String, 
-  day*: String {"format": "dd"}, 
-  month*: String {"format": "MM"}, 
-  year*: String {"format": "y"}
-|}
-

@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 
 public class AvroSchemaDataverse extends AvroSchema {
 
-	public static void fileSchema(String data, String tableName) {
+	public static String fileSchema(String data, String tableName) {
 		StringBuilder schema = new StringBuilder();
 		Document docXML = convertStringToXMLDocument(data);
 		docXML.getDocumentElement().normalize();
@@ -57,10 +57,8 @@ public class AvroSchemaDataverse extends AvroSchema {
 			}
 		}
 		schema.append("]}");
-
-		System.out.println(schema.toString());
 		
-		writeSchema(schema.toString(), tableName + ".schema");
+		return schema.toString();
 	}
 
 }

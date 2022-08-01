@@ -22,7 +22,7 @@ JsonToAvroSchemaConvertor::getBytesOfJsonAsParquet(vars.tabla, payload)]]></ee:s
 output application/octet-stream
 import java!com::ntt::parquet::JsonToAvroSchemaConvertor
 ---
-JsonToAvroSchemaConvertor::getBytesOfJsonAsParquet(vars.tabla, payload, vars.schemafile[0].typedValue as String)]]></ee:set-payload>
+JsonToAvroSchemaConvertor::getBytesOfJsonAsParquet(vars.tabla, payload, vars.schemafile as String)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
