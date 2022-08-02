@@ -33,7 +33,6 @@ payload.response map(payload.response[$$]
 filterObject ((value, key, index) -&gt; 
     !(key contains("@"))
 ))]' doc:name="To Json with etags filtered" doc:id="2f3113b4-a88c-477b-b7df-941934a65ed1" />
-		<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="92be9470-cea6-4f12-8efa-b9c641c4c48b" name="dataverse-to-snowflake-payload-transform" />
 		<flow-ref doc:name="post-to-snowflake-paginated" doc:id="0ae9719c-680b-4687-b67f-d7846256862c" name="post-to-snowflake-paginated" />
 		<json-logger:logger doc:name="END: Dataverse to Snowflake" doc:id="23996203-ae60-4159-ac71-97314fde795e" config-ref="JSON_Logger_Config" message="END: Gold to snowflake" tracePoint="END"/>
 	
