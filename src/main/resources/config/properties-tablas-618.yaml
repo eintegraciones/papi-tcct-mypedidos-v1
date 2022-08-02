@@ -31,7 +31,16 @@ tablas:
           #"pdv.RFS_Pronostico", # pendiente de revision por conflicto: alta volumetría
           #"PP_PEP_Venta_Desagrupado", # pendiente de revision por conflicto: alta volumetría
           "pdv.Modificacion_PdV_Local",
-          "pdv.RFS_Evolutivo"
+          "pdv.RFS_Evolutivo",
+          "rfs_historialreleaseses",
+          "rfs_local_albaraneses",
+          "rfs_locals",
+          "rfs_maestrotramitadors",
+          "rfs_estado_vus",
+          "rfs_mantenimientos",
+          "pyp_camposlocaleses",
+          "pyp_historialreleasespps",
+          "pyp_mantenimiento_pps"
           
       ]
       
