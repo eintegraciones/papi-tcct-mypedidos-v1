@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 	<sub-flow name="bronze-to-silver-Flow" doc:id="d18a966d-f349-4ea2-8edd-fe9e019bee6b" >
 		<json-logger:logger doc:name="START: Bronze to silver" doc:id="0d635a48-768c-4bbf-b551-ea81850104ce" config-ref="JSON_Logger_Config" message="START: Bronze to silver"/>
-		<http:request method="GET" doc:name="GET /api/v1/datalake-bronze/{year}/{month}/{day}/{tabla}" doc:id="5d8c0d2a-c77b-4714-96c7-d68918b55e41" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.date.year as String ++ "/" ++ vars.date.month as String ++ "/" ++ vars.date.day as String ++ "/" ++ vars.tabla as String]' outputMimeType="application/json">
+		<http:request method="GET" doc:name="GET /api/v1/datalake-bronze/{year}/{month}/{day}/{tabla}" doc:id="5d8c0d2a-c77b-4714-96c7-d68918b55e41" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-bronze/" ++ vars.date.year as String ++ "/" ++ vars.date.month as String ++ "/" ++ vars.date.day as String ++ "/" ++ vars.tabla as String]' outputMimeType="application/json" responseTimeout='#[p("timeout.response.get")]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<set-payload value="#[%dw 2.0
@@ -18,7 +18,7 @@ import fromBase64 from dw::core::Binaries
 ---
 fromBase64(payload.file.bytes) as Binary]" doc:name="Set payload to parquet bytes" doc:id="98c45902-12df-4094-b348-87375f32b936" />
 		<flow-ref doc:name="parquet-bytes-to-multipart" doc:id="f8c011ab-2637-4fdb-b869-6d37bd197ec0" name="parquet-bytes-to-multipart" />
-		<http:request method="POST" doc:name="POST /api/v1/datalake-silver/{tabla}" doc:id="c2d876dc-c931-41bd-9bcb-970e429a163c" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-silver/" ++ vars.tabla as String]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS">
+		<http:request method="POST" doc:name="POST /api/v1/datalake-silver/{tabla}" doc:id="c2d876dc-c931-41bd-9bcb-970e429a163c" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-silver/" ++ vars.tabla as String]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout='#[p("timeout.response.post")]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<json-logger:logger doc:name="END: Bronze to silver" doc:id="ada45afd-25f3-4f44-8fe7-1729673dc49b" config-ref="JSON_Logger_Config" message="END: Bronze to silver" tracePoint="END"/>

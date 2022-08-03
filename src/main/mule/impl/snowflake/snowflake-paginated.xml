@@ -19,7 +19,7 @@ p('tablas.' ++ (vars.integration_id as String) ++ '.' ++ (vars.tabla as String) 
 		<logger level="INFO" doc:name="Deleted items" doc:id="6db6f80d-652b-4351-b1d1-3e41f707bd1e" message='#["Deleted items from " ++ vars."snowflake-tablename"]'/>
 		<foreach doc:name="For Each" doc:id="82b8dc8d-6268-463c-982e-85196c388b56" collection="#[vars.items]" batchSize="2000">
 			<flow-ref doc:name="dataverse-to-snowflake-payload-transform" doc:id="e98d9d97-8fa7-4590-8173-a43cdd87251e" name="dataverse-to-snowflake-payload-transform" />
-			<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout="50000">
+			<http:request method="POST" doc:name="POST /api/v1/snowflake/{tabla}" doc:id="7e20d922-c1a8-43b9-952d-cd37d3a361fa" config-ref="Snowflake_HTTP_Request_configuration" path='#["/snowflake/" ++ vars["snowflake-tablename"]]' sendBodyMode="ALWAYS" requestStreamingMode="ALWAYS" responseTimeout='#[p("timeout.response.post")]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		</foreach>

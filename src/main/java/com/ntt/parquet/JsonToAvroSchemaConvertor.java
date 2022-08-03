@@ -18,7 +18,8 @@ import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
 public class JsonToAvroSchemaConvertor {
-	
+
+	@Deprecated
 	private static Map<String, Object> extractFieldMapFromJson(List<Map<String, Object>> json) {
 		Map<String, Object> resp = new LinkedHashMap<String, Object>();
 		int keySize = json.get(0).keySet().size();
@@ -39,6 +40,7 @@ public class JsonToAvroSchemaConvertor {
 		return resp;
 	}
 	
+	@Deprecated
 	private static Schema toAvroSchema(String tableName, List<Map<String, Object>> json) {
 		Map<String, Object> map = extractFieldMapFromJson(json);
 		
@@ -91,7 +93,8 @@ public class JsonToAvroSchemaConvertor {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Deprecated
 	public static byte[] getBytesOfJsonAsParquet(String tableName, List<Map<String, Object>> data) {
 		String tmpPath = "tmp/" + tableName + System.currentTimeMillis() + ".parquet";
 		System.out.println("JSON INPUT: " + data.toString().substring(0,500));

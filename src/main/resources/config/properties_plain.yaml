@@ -26,7 +26,13 @@ keystore:
    
 # Pagination for sqlserver requests
 pagination:
-  itemsPerPage: "5000"
+  itemsPerPage: "2000"
+  
+# Response timeout for HTTP requests
+timeout:
+  response:
+    "post": "180000"
+    "get": "120000"
 
 # Scheduler configuration
 scheduler:

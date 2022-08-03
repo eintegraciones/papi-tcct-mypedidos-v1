@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 	<sub-flow name="gold-to-snowflake-Flow" doc:id="601ee38a-8e47-4071-89dc-4b4a6007fa0e" >
 		<json-logger:logger doc:name="START: Gold to snowflake" doc:id="b876362b-4c11-49ba-80b9-46d19e19e6f1" config-ref="JSON_Logger_Config" message="START: Gold to snowflake"/>
-		<http:request method="GET" doc:name="GET /api/v1/datalake-gold/{year}/{month}/{day}/{tabla}" doc:id="09d7a043-59da-4b1c-88f4-c5727b2e3e2a" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-gold/" ++ vars.date.year as String ++ "/" ++ vars.date.month as String ++ "/" ++ vars.date.day as String ++ "/" ++ vars.tabla as String]' outputMimeType="application/json" >
+		<http:request method="GET" doc:name="GET /api/v1/datalake-gold/{year}/{month}/{day}/{tabla}" doc:id="09d7a043-59da-4b1c-88f4-c5727b2e3e2a" config-ref="Datalake_HTTP_Request_configuration" path='#["/datalake-gold/" ++ vars.date.year as String ++ "/" ++ vars.date.month as String ++ "/" ++ vars.date.day as String ++ "/" ++ vars.tabla as String]' outputMimeType="application/json" responseTimeout='#[p("timeout.response.get")]'>
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<set-variable value="#[payload.file.fileName]" doc:name="filename" doc:id="071fc9df-d235-4612-a025-adea0d46a048" variableName="filename"/>

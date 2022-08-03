@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 		<flow-ref doc:name="set-current-date" doc:id="f0352659-bb80-4ab9-94d7-01d59ededb71" name="set-current-date"/>
 		<set-variable value="556" doc:name="integration_id: 556" doc:id="3db3d4ce-086c-4206-ab98-81a87df5ead2" variableName="integration_id"/>
 		<flow-ref doc:name="get-array-of-tables-by-integration_id" doc:id="a7765056-b940-4469-8826-046e9a630789" name="get-array-of-tables-by-integration_id"/>
-		<http:request method="GET" doc:name="GET SCHEMA DATAVERSE" doc:id="9681badb-7e11-41cd-a098-3d599865e540" config-ref="Dataverse_HTTP_Request_configuration" path='/dataverse/$metadata' responseTimeout="120000" target="xml_dataverse">
+		<http:request method="GET" doc:name="GET SCHEMA DATAVERSE" doc:id="9681badb-7e11-41cd-a098-3d599865e540" config-ref="Dataverse_HTTP_Request_configuration" path="/dataverse/$metadata" responseTimeout='#[p("timeout.response.get")]' target="xml_dataverse">
 			<reconnect frequency="5000" count="3" />
 		</http:request>
 		<batch:job jobName="dataverse-sqlserver-to-snowflake-postBatch_Job" doc:id="103a81ce-cbcf-4cd3-a19a-7b0aa826bd1f" maxFailedRecords="-1">
@@ -33,7 +33,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 							
 						</when>
 						<when expression='#["sqlserver" == vars.origin]'>
-							<http:request method="GET" doc:name="GET columns SQLServer" doc:id="8c292354-c2ab-4aac-b9aa-f168404ae559" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String ++ "/columns"]' responseTimeout="120000" target="json_sqlserver">
+							<http:request method="GET" doc:name="GET columns SQLServer" doc:id="8c292354-c2ab-4aac-b9aa-f168404ae559" config-ref="SQLServer_HTTP_Request_configuration" path='#["/sqlserver/" ++ vars.tabla as String ++ "/columns"]' responseTimeout='#[p("timeout.response.get")]' target="json_sqlserver">
 								<reconnect frequency="5000" count="3" />
 								<http:query-params><![CDATA[#[output application/java
 ---
@@ -47,7 +47,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 output application/java
 import java!com::ntt::transformer::AvroSchemaSQLServer
 ---
-AvroSchemaSQLServer::fileSchema(vars.json_sqlserver, vars.tablename)]]></ee:set-payload>
+AvroSchemaSQLServer::generateSchema(vars.json_sqlserver, vars.tabla)]]></ee:set-payload>
 								</ee:message>
 								<ee:variables >
 								</ee:variables>
@@ -62,7 +62,7 @@ AvroSchemaSQLServer::fileSchema(vars.json_sqlserver, vars.tablename)]]></ee:set-
 output application/java
 import java!com::ntt::transformer::AvroSchemaDataverse
 ---
-AvroSchemaDataverse::fileSchema(write(vars.xml_dataverse, "application/xml") as String, vars.tablename)]]></ee:set-payload>
+AvroSchemaDataverse::generateSchema(write(vars.xml_dataverse, "application/xml") as String, vars.tabla)]]></ee:set-payload>
 								</ee:message>
 								<ee:variables >
 								</ee:variables>
